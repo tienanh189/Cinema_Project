@@ -4,10 +4,6 @@ namespace CinemaAPI.Models
 {
     public class CinemaDbContext : DbContext
     {
-        public CinemaDbContext()
-        {
-        }
-
         public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options)
         {
         }
