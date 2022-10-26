@@ -1,4 +1,7 @@
-﻿namespace CinemaAPI.Models.Dto
+﻿using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+
+namespace CinemaAPI.Models.Dto
 {
     public class CategoryMovieDto : BaseModel
     {

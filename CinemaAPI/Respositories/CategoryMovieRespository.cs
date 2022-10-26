@@ -3,6 +3,7 @@ using CinemaAPI.Models;
 using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Respositories
 {
@@ -43,15 +44,15 @@ namespace CinemaAPI.Respositories
             return false;
         }
 
-        public async Task<List<CategoryMovieDto>> GetAll()
+        public async Task<IQueryable<CategoryMovieDto>> GetAll()
         {
-            var categoryMovies = await _db.CategoryMovie!.Where(x => x.IsDeleted == false).ToListAsync();
-            return _mapper.Map<List<CategoryMovieDto>>(categoryMovies);
+            var categoryMovies = _db.CategoryMovie.Where(x => x.IsDeleted == false).AsEnumerable();
+            return _mapper.Map<List<CategoryMovieDto>>(categoryMovies).AsQueryable();
         }
 
         public async Task<CategoryMovieDto> GetById(Guid id)
         {
-            var categoryMovie = await _db.CategoryMovie!.Where(x => x.IsDeleted == false && x.CategoryMovieId == id).FirstOrDefaultAsync();
+            var categoryMovie = await _db.CategoryMovie.Where(x => x.IsDeleted == false && x.CategoryMovieId == id).FirstOrDefaultAsync();
             return _mapper.Map<CategoryMovieDto>(categoryMovie);
         }
 

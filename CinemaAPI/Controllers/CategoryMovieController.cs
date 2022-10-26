@@ -1,7 +1,8 @@
-﻿using CinemaAPI.Models.Dto;
+﻿using CinemaAPI.Helpers;
+using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace CinemaAPI.Controllers
 {
@@ -17,11 +18,12 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] Pagination pagination)
         {
             try
             {
-                return Ok(await _repo.GetAll());
+                var categoryMovies = await _repo.GetAll();
+                return Ok(await GetPaginatedResponse(categoryMovies, pagination));
             }
             catch (Exception e)
             {
