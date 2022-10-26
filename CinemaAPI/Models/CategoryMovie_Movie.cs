@@ -6,6 +6,6 @@
         public Guid MovieId { get; set; }
         public Movie Movies { get; set; }
         public Guid CategoryMovieId { get; set; }
-        public Movie CategoryMovies { get; set; }
+        public CategoryMovie CategoryMovies { get; set; }
     }
 }

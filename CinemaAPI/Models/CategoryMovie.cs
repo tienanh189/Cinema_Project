@@ -1,4 +1,8 @@
-﻿namespace CinemaAPI.Models
+﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
+namespace CinemaAPI.Models
 {
     public class CategoryMovie :BaseModel
     {
