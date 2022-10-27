@@ -22,8 +22,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 //Life cycle DI
 builder.Services.AddScoped<ICategoryMovieRespository, CategoryMovieRespository>();
-
-
+builder.Services.AddScoped<ISeatRespository, SeatRespository>();
+builder.Services.AddScoped<ICategorySeatRespository, CategorySeatRespository>();
+builder.Services.AddScoped<IDiscountRespository, DiscountRespository>();
 
 var app = builder.Build();
 

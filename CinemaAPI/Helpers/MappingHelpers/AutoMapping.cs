@@ -10,6 +10,12 @@ namespace CinemaAPI.Helpers
         {
             CreateMap<CategoryMovie, CategoryMovieDto>();
             CreateMap<CategoryMovieDto, CategoryMovie>();
+            CreateMap<SeatDto, Seat>();
+            CreateMap<Seat, SeatDto>();
+            CreateMap<CategorySeatDto, CategorySeat>();
+            CreateMap<CategorySeat, CategorySeatDto>();
+            CreateMap<DiscountDto, Discount>();
+            CreateMap<Discount, DiscountDto>();
         }
     }
 }
