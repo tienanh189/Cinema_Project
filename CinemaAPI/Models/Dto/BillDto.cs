@@ -8,6 +8,5 @@ namespace CinemaAPI.Models.Dto
         public Guid BillId { get; set; }
         public float TotalAmount { get; set; }
         public Guid DiscountId { get; set; }
-        public Discount Discounts { get; set; }
     }
 }
