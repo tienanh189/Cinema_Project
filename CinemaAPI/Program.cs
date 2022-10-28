@@ -23,6 +23,10 @@ builder.Services.AddAutoMapper(typeof(Program));
 //Life cycle DI
 builder.Services.AddScoped<ICategoryMovieRespository, CategoryMovieRespository>();
 
+builder.Services.AddScoped<IRoomRespository, RoomRespository>();
+
+builder.Services.AddScoped<ICinemaRespository, CinemaRespository>();
+
 
 
 var app = builder.Build();
