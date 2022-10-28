@@ -64,6 +64,9 @@ namespace CinemaAPI.Respositories
             if (room != null)
             {
                 room.RoomName = dto.RoomName;
+                room.CinemaId = dto.CinemaId;
+                room.Status = dto.Status;
+                room.Cinemas = dto.Cinemas;
                 room.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();
