@@ -39,6 +39,8 @@ namespace CinemaAPI.Respositories
             if (categoryMovie != null)
             {
                 categoryMovie.IsDeleted = true;
+                categoryMovie.DeletedTime = DateTime.Now;
+                await _db.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -52,8 +54,8 @@ namespace CinemaAPI.Respositories
 
         public async Task<CategoryMovieDto> GetById(Guid id)
         {
-            var categoryMovie = await _db.CategoryMovie.Where(x => x.IsDeleted == false && x.CategoryMovieId == id).FirstOrDefaultAsync();
-            return _mapper.Map<CategoryMovieDto>(categoryMovie);
+            var categoryMovie = _db.CategoryMovie.Where(x => x.IsDeleted == false && x.CategoryMovieId == id).AsEnumerable();
+            return _mapper.Map<CategoryMovieDto>(categoryMovie.FirstOrDefault());
         }
 
         public async Task<CategoryMovieDto> Update(Guid id, CategoryMovieDto dto)
@@ -62,8 +64,10 @@ namespace CinemaAPI.Respositories
             if (categoryMovie != null)
             {
                 categoryMovie.CategoryMovieName = dto.CategoryMovieName;
+                categoryMovie.IsDeleted = dto.IsDeleted;
                 categoryMovie.ModifiedTime = DateTime.Now;
             }
+            _db.CategoryMovie.Update(categoryMovie);
             await _db.SaveChangesAsync();
             return _mapper.Map<CategoryMovieDto>(categoryMovie);
         }  
