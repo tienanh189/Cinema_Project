@@ -33,6 +33,14 @@ builder.Services.AddScoped<IRoomRespository, RoomRespository>();
 
 builder.Services.AddScoped<ICinemaRespository, CinemaRespository>();
 
+builder.Services.AddScoped<IMovieRespository, MovieRespository>();
+
+builder.Services.AddScoped<IShowTimeRespository, ShowTimeRespository>();
+
+builder.Services.AddScoped<ITicketRespository, TicketRespository>();
+
+
+
 
 
 var app = builder.Build();

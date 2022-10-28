@@ -7,5 +7,7 @@ namespace CinemaAPI.Models.Dto
         public Guid RoomId { get; set; }
         public string? RoomName { get; set; }
         public Guid CinemaId { get; set; }
+        public bool? Status { get; set; }
+        public Cinema Cinemas { get; set; }
     }
 }
