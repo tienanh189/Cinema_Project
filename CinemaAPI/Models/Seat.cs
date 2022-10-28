@@ -4,6 +4,7 @@
     {
         public Guid SeatId { get; set; }
         public string? SeatName { get; set; }
+        public bool ? Status { get; set; }
         public Guid CategorySeatId { get; set; }
         public CategorySeat CategorySeats { get; set; }
         public Guid RoomId { get; set; }

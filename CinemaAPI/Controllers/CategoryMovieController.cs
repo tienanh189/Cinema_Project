@@ -34,8 +34,16 @@ namespace CinemaAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var categoryMovie = await _repo.GetById(id);
-            return categoryMovie == null ? NotFound() : Ok(categoryMovie);
+            try
+            {
+                var categoryMovie = await _repo.GetById(id);
+                return categoryMovie == null ? NotFound() : Ok(categoryMovie);
+            }
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
+            
         }
 
         [HttpPost]

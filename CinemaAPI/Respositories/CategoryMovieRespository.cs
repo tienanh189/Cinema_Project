@@ -64,8 +64,10 @@ namespace CinemaAPI.Respositories
             if (categoryMovie != null)
             {
                 categoryMovie.CategoryMovieName = dto.CategoryMovieName;
+                categoryMovie.IsDeleted = dto.IsDeleted;
                 categoryMovie.ModifiedTime = DateTime.Now;
             }
+            _db.CategoryMovie.Update(categoryMovie);
             await _db.SaveChangesAsync();
             return _mapper.Map<CategoryMovieDto>(categoryMovie);
         }  
