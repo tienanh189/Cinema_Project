@@ -1,0 +1,138 @@
+<div class="my-4">
+    <h3 class="mt-4 container border-bottom">Phim Đang Chiếu</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-lg-4" *ngFor="let film of listFilm">
+                <div class="card mt-4">
+                    <a href="/detailFilm">
+                        <img
+                            src="{{film.image}}" 
+                            alt="Avatar"
+                            class="image position-relative"
+                            style="width: 100%"
+                        />
+                    </a>
+                    <div class="middle">
+                        <button
+                            class="position-absolute bottom-0 start-50 start-50 translate-middle btn btn-lg btn-outline-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#dialog-order"
+                        >
+                            Đặt vé
+                        </button>
+                    </div>
+                    <!-- dialog đặt vé -->
+                    <app-modal-order></app-modal-order>
+                </div>
+                <div class="">CÔ GÁI TỪ QUÁ KHỨ</div>
+                <div class="fw-lighter">GIRL FROM THE PAST</div>
+            </div>
+            <!-- <div class="col-sm-6 col-lg-4">
+                <div class="card mt-4">
+                    <a href="#">
+                        <img
+                            src="https://cdn.galaxycine.vn/media/2022/10/12/1350wx900h_1665592999797.jpg"
+                            alt="Avatar"
+                            class="image position-relative"
+                            style="width: 100%"
+                        />
+                        <div class="middle">
+                            <button
+                                class="position-absolute bottom-0 start-50 start-50 translate-middle btn btn-lg btn-outline-light"
+                            >
+                                Đặt vé
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <div class="mt-2">CÔ GÁI TỪ QUÁ KHỨ</div>
+                <div class="fw-lighter">GIRL FROM THE PAST</div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="card mt-4">
+                    <a href="#">
+                        <img
+                            src="https://baocantho.com.vn/image/news/2022/20220721/thumbnail/470x300/1658407009.jpg"
+                            alt="Avatar"
+                            class="image position-relative"
+                            style="width: 100%"
+                        />
+                        <div class="middle">
+                            <button
+                                class="position-absolute bottom-0 start-50 start-50 translate-middle btn btn-lg btn-outline-light"
+                            >
+                                Đặt vé
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <div class="mt-2">CÔ GÁI TỪ QUÁ KHỨ</div>
+                <div class="fw-lighter">GIRL FROM THE PAST</div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="card mt-4">
+                    <a href="#">
+                        <img
+                            src="https://cdn.galaxycine.vn/media/2022/9/26/1350wx900h_1664177568281.jpg"
+                            alt="Avatar"
+                            class="image position-relative"
+                            style="width: 100%"
+                        />
+                        <div class="middle">
+                            <button
+                                class="position-absolute bottom-0 start-50 start-50 translate-middle btn btn-lg btn-outline-light"
+                            >
+                                Đặt vé
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <div class="mt-2">CÔ GÁI TỪ QUÁ KHỨ</div>
+                <div class="fw-lighter">GIRL FROM THE PAST</div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="card mt-4">
+                    <a href="#">
+                        <img
+                            src="https://cdn.galaxycine.vn/media/2022/10/24/nghi-thuc-cam_1666600485329.jpg"
+                            alt="Avatar"
+                            class="image position-relative"
+                            style="width: 100%"
+                        />
+                        <div class="middle">
+                            <button
+                                class="position-absolute bottom-0 start-50 start-50 translate-middle btn btn-lg btn-outline-light"
+                            >
+                                Đặt vé
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <div class="mt-2">CÔ GÁI TỪ QUÁ KHỨ</div>
+                <div class="fw-lighter">GIRL FROM THE PAST</div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="card mt-4">
+                    <a href="#">
+                        <img
+                            src="https://cdn.galaxycine.vn/media/2022/10/20/450wx300h_1666254345527.jpg"
+                            alt="Avatar"
+                            class="image position-relative"
+                            style="width: 100%"
+                        />
+                        <div class="middle">
+                            <button
+                                class="position-absolute bottom-0 start-50 start-50 translate-middle btn btn-lg btn-outline-light"
+                            >
+                                Đặt vé
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                <div class="mt-2">CÔ GÁI TỪ QUÁ KHỨ</div>
+                <div class="fw-lighter">GIRL FROM THE PAST</div>
+            </div> -->
+        </div>
+    </div>
+</div>
+<!-- cach lay stt let i= index   -->
