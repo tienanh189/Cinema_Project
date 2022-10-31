@@ -9,11 +9,15 @@ namespace CinemaAPI.Controllers
     [ApiController]
     public class MovieController : _ControllerBase
     {
-        private readonly IMovieRespository _repo;
+        private readonly IMovieRespository _repoMovie;
+        private readonly ICategoryMovieRespository _categoryMovie;
+        private readonly ICategoryMovie_MovieRespository _categoryMovie_Movie;
 
-        public MovieController(IMovieRespository repo)
+        public MovieController(IMovieRespository repoMovie, ICategoryMovieRespository categoryMovie, ICategoryMovie_MovieRespository categoryMovie_MovieRespository)
         {
-            _repo = repo;
+            _repoMovie = repoMovie;
+            _categoryMovie = categoryMovie;
+            _categoryMovie_Movie = categoryMovie_MovieRespository;
         }
 
         [HttpGet]
@@ -21,7 +25,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var movies = await _repo.GetAll();
+                var movies = await _repoMovie.GetAll();
                 return Ok(await GetPaginatedResponse(movies, pagination));
             }
             catch (Exception e)
@@ -33,7 +37,14 @@ namespace CinemaAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var movie = await _repo.GetById(id);
+            var movie = await _repoMovie.GetById(id);
+            return movie == null ? NotFound() : Ok(movie);
+        }
+
+        [HttpGet("detailMovieId")]
+        public async Task<IActionResult> GetMovieDetail(Guid detailMovieId)
+        {
+            var movie = await GetMovieDetailHelper(detailMovieId);
             return movie == null ? NotFound() : Ok(movie);
         }
 
@@ -42,7 +53,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var movie = await _repo.Create(dto);
+                var movie = await _repoMovie.Create(dto);
                 return Ok(movie);
             }
             catch (Exception e)
@@ -60,7 +71,7 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var movie = await _repo.Update(id, dto);
+                var movie = await _repoMovie.Update(id, dto);
                 return Ok(movie);
             }
             catch (Exception e)
@@ -74,7 +85,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var result = await _repo.Delete(id);
+                var result = await _repoMovie.Delete(id);
                 return result == true ? Ok(result) : NotFound();
             }
             catch (Exception e)
@@ -82,5 +93,44 @@ namespace CinemaAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+
+        #region API Helers
+        private async Task<MovieDetail> GetMovieDetailHelper(Guid Id)
+        {
+            var movie = await _repoMovie.GetAll();
+            var categorymovie = await _categoryMovie.GetAll();
+            var cateMovie_Movie = await _categoryMovie_Movie.GetAll();
+
+            var movieDetails = from cmm in cateMovie_Movie
+                               join m in movie on cmm.MovieId equals m.MovieId
+                               join cm in categorymovie on cmm.CategoryMovieId equals cm.CategoryMovieId
+                               where cmm.MovieId == Id
+                               select new
+                               {
+                                   MovieId = Id,
+                                   MovieName = m.MovieName,
+                                   Duration = m.Duration,
+                                   Actor = m.Actor,
+                                   Director = m.Director,
+                                   ReleaseDate = m.ReleaseDate,
+                                   Image = m.Image,
+                                   ListCategoryMovieName = cm.CategoryMovieName
+                               };
+            //6e1a8cd3-ecbe-40d7-950b-6757abbbfa10
+            var movieDetail = new MovieDetail();
+            foreach (var item in movieDetails)
+            {
+                movieDetail.MovieId = item.MovieId;
+                movieDetail.MovieName = item.MovieName;
+                movieDetail.Duration = item.Duration;
+                movieDetail.ReleaseDate = item.ReleaseDate;
+                movieDetail.Actor = item.Actor;
+                movieDetail.Director = item.Director;
+                movieDetail.ListCategoryMovieName.Add(item.ListCategoryMovieName);
+            }
+            return movieDetail;
+        }
+        #endregion
     }
 }

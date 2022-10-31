@@ -14,4 +14,14 @@ namespace CinemaAPI.Models.Dto
         public string? Image { get; set; }
         public DateTime ReleaseDate { get; set; }
     }
+
+    public class MovieDetail : BaseModel
+    {
+        public MovieDetail()
+        {
+            ListCategoryMovieName = new List<string>();
+        }
+
+        public List<string> ListCategoryMovieName { get; set; }
+    }
 }
