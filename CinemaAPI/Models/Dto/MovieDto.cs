@@ -15,7 +15,7 @@ namespace CinemaAPI.Models.Dto
         public DateTime ReleaseDate { get; set; }
     }
 
-    public class MovieDetail : BaseModel
+    public class MovieDetail : MovieDto
     {
         public MovieDetail()
         {

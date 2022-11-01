@@ -126,6 +126,7 @@ namespace CinemaAPI.Controllers
                 movieDetail.Duration = item.Duration;
                 movieDetail.ReleaseDate = item.ReleaseDate;
                 movieDetail.Actor = item.Actor;
+                movieDetail.Image = item.Image;
                 movieDetail.Director = item.Director;
                 movieDetail.ListCategoryMovieName.Add(item.ListCategoryMovieName);
             }
