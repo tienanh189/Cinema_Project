@@ -39,7 +39,7 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var movies = await GetAllMoviesHelper();
+                var movies = await GetAllMoviesWithType();
                 return Ok(movies);
             }
             catch (Exception e)
@@ -148,7 +148,7 @@ namespace CinemaAPI.Controllers
             return movieDetail;
         }
 
-        private async Task<List<MovieDto>> GetAllMoviesHelper()
+        private async Task<List<MovieDto>> GetAllMoviesWithType()
         {
             var movies = await _repoMovie.GetAll();
             foreach (var movie in movies)
