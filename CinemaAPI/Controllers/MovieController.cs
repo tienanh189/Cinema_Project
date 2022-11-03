@@ -20,13 +20,27 @@ namespace CinemaAPI.Controllers
             _categoryMovie_Movie = categoryMovie_MovieRespository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] Pagination pagination)
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] Pagination pagination)
         {
             try
             {
                 var movies = await _repoMovie.GetAll();
                 return Ok(await GetPaginatedResponse(movies, pagination));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var movies = await GetAllMoviesHelper();
+                return Ok(movies);
             }
             catch (Exception e)
             {
@@ -96,14 +110,15 @@ namespace CinemaAPI.Controllers
 
 
         #region API Helers
+
         private async Task<MovieDetail> GetMovieDetailHelper(Guid Id)
         {
-            var movie = await _repoMovie.GetAll();
+            var movies = await _repoMovie.GetAll();
             var categorymovie = await _categoryMovie.GetAll();
             var cateMovie_Movie = await _categoryMovie_Movie.GetAll();
 
             var movieDetails = from cmm in cateMovie_Movie
-                               join m in movie on cmm.MovieId equals m.MovieId
+                               join m in movies on cmm.MovieId equals m.MovieId
                                join cm in categorymovie on cmm.CategoryMovieId equals cm.CategoryMovieId
                                where cmm.MovieId == Id
                                select new
@@ -132,6 +147,28 @@ namespace CinemaAPI.Controllers
             }
             return movieDetail;
         }
+
+        private async Task<List<MovieDto>> GetAllMoviesHelper()
+        {
+            var movies = await _repoMovie.GetAll();
+            foreach (var movie in movies)
+            {
+                int result = 0;
+                DateTime today = DateTime.Now;
+                DateTime realseDay = movie.ReleaseDate;
+                result = (int)(today - realseDay).TotalDays;
+                if (result<=14)
+                {
+                    movie.IsShowing = true;
+                }
+                else
+                {
+                    movie.IsShowing = false;
+                }
+            }
+            return movies.ToList();
+        } 
+
         #endregion
     }
 }

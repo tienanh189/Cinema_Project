@@ -13,6 +13,7 @@ namespace CinemaAPI.Models.Dto
         public string? Director { get; set; }
         public string? Image { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public bool? IsShowing { get; set; }
     }
 
     public class MovieDetail : MovieDto
