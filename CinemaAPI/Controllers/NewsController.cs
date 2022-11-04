@@ -8,11 +8,11 @@ namespace CinemaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DiscountController : _ControllerBase
+    public class NewsController : _ControllerBase
     {
-        private readonly IDiscountRespository _repo;
+        private readonly INewsRespository _repo;
 
-        public DiscountController(IDiscountRespository repo)
+        public NewsController(INewsRespository repo)
         {
             _repo = repo;
         }
@@ -22,8 +22,8 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var discount = await _repo.GetAll();
-                return Ok(await GetPaginatedResponse(discount, pagination));
+                var news = await _repo.GetAll();
+                return Ok(await GetPaginatedResponse(news, pagination));
             }
             catch (Exception e)
             {
@@ -34,17 +34,17 @@ namespace CinemaAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var discount = await _repo.GetById(id);
-            return discount == null ? NotFound() : Ok(discount);
+            var news = await _repo.GetById(id);
+            return news == null ? NotFound() : Ok(news);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(DiscountDto dto)
+        public async Task<IActionResult> Create(NewsDto dto)
         {
             try
             {
-                var discount = await _repo.Create(dto);
-                return Ok(discount);
+                var news = await _repo.Create(dto);
+                return Ok(news);
             }
             catch (Exception e)
             {
@@ -53,7 +53,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPut("id")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] DiscountDto dto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] NewsDto dto)
         {
             try
             {
@@ -61,8 +61,8 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var discount = await _repo.Update(id, dto);
-                return Ok(discount);
+                var news = await _repo.Update(id, dto);
+                return Ok(news);
             }
             catch (Exception e)
             {

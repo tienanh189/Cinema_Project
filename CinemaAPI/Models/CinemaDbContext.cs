@@ -12,7 +12,7 @@ namespace CinemaAPI.Models
         public DbSet<CategoryMovie> CategoryMovie { get; set; } 
         public DbSet<CategoryMovie_Movie> CategoryMovie_Movie { get; set; }
         public DbSet<CategorySeat> CategorySeat { get; set; }
-        public DbSet<Discount> Discount { get; set; }
+        public DbSet<News> News { get; set; }
         public DbSet<Cinema> Cinema { get; set; }
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Permission> Permission { get; set; }

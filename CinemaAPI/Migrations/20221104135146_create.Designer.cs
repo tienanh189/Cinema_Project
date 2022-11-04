@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20221027132416_create")]
+    [Migration("20221104135146_create")]
     partial class create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -255,6 +255,9 @@ namespace CinemaAPI.Migrations
                     b.Property<int?>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -383,6 +386,9 @@ namespace CinemaAPI.Migrations
 
                     b.Property<string>("SeatName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
 
                     b.HasKey("SeatId");
 

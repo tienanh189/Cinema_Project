@@ -93,6 +93,7 @@ namespace CinemaAPI.Migrations
                     Actor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Director = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -292,6 +293,7 @@ namespace CinemaAPI.Migrations
                 {
                     SeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SeatName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: true),
                     CategorySeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -379,7 +381,7 @@ namespace CinemaAPI.Migrations
                         column: x => x.ShowTimeId,
                         principalTable: "ShowTime",
                         principalColumn: "ShowTimeId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
