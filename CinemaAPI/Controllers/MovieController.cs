@@ -169,34 +169,25 @@ namespace CinemaAPI.Controllers
         private async Task<List<MovieDetail>> GetAllMovieDetailHelper()
         {
             var movies = await _repoMovie.GetAll();
-            var categorymovie = await _categoryMovie.GetAll();
-            var cateMovie_Movie = await _categoryMovie_Movie.GetAll();
-
-            var movieDetails = from cmm in cateMovie_Movie
-                               join m in movies on cmm.MovieId equals m.MovieId
-                               join cm in categorymovie on cmm.CategoryMovieId equals cm.CategoryMovieId
-                               select new
-                               {
-                                   MovieId = m.MovieId,
-                                   MovieName = m.MovieName,
-                                   Duration = m.Duration,
-                                   Actor = m.Actor,
-                                   Director = m.Director,
-                                   Description = m.MovieDescription,
-                                   ReleaseDate = m.ReleaseDate,
-                                   Image = m.Image,
-                                   CategoryMovieName = cm.CategoryMovieName
-                               };
-            //6e1a8cd3-ecbe-40d7-950b-6757abbbfa10
             var movieDetailList = new List<MovieDetail>();
-            foreach (var movie in movieDetails)
+            foreach (var movie in movies.ToList())
             {
-                var movieDetail = new MovieDetail(movie.MovieId, movie.MovieName, movie.Description,
-                    movie.Duration, movie.Actor, movie.Director, movie.Image, movie.ReleaseDate, false);
-                movieDetail.ListCategoryMovieName.Add(movie.CategoryMovieName);
+                var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, false);
+                movieDetail = await GetMovieDetailHelper(movie.MovieId);
+                if (movieDetail.MovieId == Guid.Empty)
+                {
+                    movieDetail.MovieId = movie.MovieId;
+                    movieDetail.MovieName = movie.MovieName;
+                    movieDetail.Duration = movie.Duration;
+                    movieDetail.ReleaseDate = movie.ReleaseDate;
+                    movieDetail.MovieDescription = movie.MovieDescription;
+                    movieDetail.Actor = movie.Actor;
+                    movieDetail.Image = movie.Image;
+                    movieDetail.Director = movie.Director;
+                }
                 movieDetailList.Add(movieDetail);
-                
             }
+  
             return movieDetailList;
         }
 
