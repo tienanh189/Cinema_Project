@@ -5,6 +5,19 @@ namespace CinemaAPI.Models.Dto
 {
     public class MovieDto : BaseModel
     {
+        public MovieDto(Guid movieId, string? movieName, string? movieDescription, int? duration, string? actor, string? director, string? image, DateTime releaseDate, bool? isShowing)
+        {
+            MovieId = movieId;
+            MovieName = movieName;
+            MovieDescription = movieDescription;
+            Duration = duration;
+            Actor = actor;
+            Director = director;
+            Image = image;
+            ReleaseDate = releaseDate;
+            IsShowing = isShowing;
+        }
+
         public Guid MovieId { get; set; }
         public string? MovieName { get; set; }
         public string? MovieDescription { get; set; }
@@ -17,12 +30,12 @@ namespace CinemaAPI.Models.Dto
     }
 
     public class MovieDetail : MovieDto
-    {
-        public MovieDetail()
+    {  
+        public MovieDetail(Guid movieId, string? movieName, string? movieDescription, int? duration, string? actor, string? director, string? image, DateTime releaseDate, bool? isShowing) 
+            : base(movieId, movieName, movieDescription, duration, actor, director, image,releaseDate, isShowing)
         {
-            ListCategoryMovieName = new List<string>();
+            this.ListCategoryMovieName = new List<string>();
         }
-
         public List<string> ListCategoryMovieName { get; set; }
     }
 }
