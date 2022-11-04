@@ -20,13 +20,41 @@ namespace CinemaAPI.Controllers
             _categoryMovie_Movie = categoryMovie_MovieRespository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] Pagination pagination)
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] Pagination pagination)
         {
             try
             {
                 var movies = await _repoMovie.GetAll();
                 return Ok(await GetPaginatedResponse(movies, pagination));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var movies = await GetAllMovies();
+                return Ok(movies);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAllMoviesWithCategory()
+        {
+            try
+            {
+                var movies = await GetAllMovieDetailHelper();
+                return Ok(movies);
             }
             catch (Exception e)
             {
@@ -96,14 +124,16 @@ namespace CinemaAPI.Controllers
 
 
         #region API Helers
+
+        //Get a movie detail
         private async Task<MovieDetail> GetMovieDetailHelper(Guid Id)
         {
-            var movie = await _repoMovie.GetAll();
+            var movies = await _repoMovie.GetAll();
             var categorymovie = await _categoryMovie.GetAll();
             var cateMovie_Movie = await _categoryMovie_Movie.GetAll();
 
             var movieDetails = from cmm in cateMovie_Movie
-                               join m in movie on cmm.MovieId equals m.MovieId
+                               join m in movies on cmm.MovieId equals m.MovieId
                                join cm in categorymovie on cmm.CategoryMovieId equals cm.CategoryMovieId
                                where cmm.MovieId == Id
                                select new
@@ -113,24 +143,76 @@ namespace CinemaAPI.Controllers
                                    Duration = m.Duration,
                                    Actor = m.Actor,
                                    Director = m.Director,
+                                   Description = m.MovieDescription,
                                    ReleaseDate = m.ReleaseDate,
                                    Image = m.Image,
-                                   ListCategoryMovieName = cm.CategoryMovieName
+                                   CategoryMovieName = cm.CategoryMovieName
                                };
             //6e1a8cd3-ecbe-40d7-950b-6757abbbfa10
-            var movieDetail = new MovieDetail();
-            foreach (var item in movieDetails)
+            var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, false);
+            foreach (var movie in movieDetails)
             {
-                movieDetail.MovieId = item.MovieId;
-                movieDetail.MovieName = item.MovieName;
-                movieDetail.Duration = item.Duration;
-                movieDetail.ReleaseDate = item.ReleaseDate;
-                movieDetail.Actor = item.Actor;
-                movieDetail.Director = item.Director;
-                movieDetail.ListCategoryMovieName.Add(item.ListCategoryMovieName);
+                movieDetail.MovieId = movie.MovieId;
+                movieDetail.MovieName = movie.MovieName;
+                movieDetail.Duration = movie.Duration;
+                movieDetail.ReleaseDate = movie.ReleaseDate;
+                movieDetail.MovieDescription = movie.Description;
+                movieDetail.Actor = movie.Actor;
+                movieDetail.Image = movie.Image;
+                movieDetail.Director = movie.Director;
+                movieDetail.ListCategoryMovieName.Add(movie.CategoryMovieName);
             }
             return movieDetail;
         }
+
+        // Get all movies with all categorymovies name of them
+        private async Task<List<MovieDetail>> GetAllMovieDetailHelper()
+        {
+            var movies = await _repoMovie.GetAll();
+            var movieDetailList = new List<MovieDetail>();
+            foreach (var movie in movies.ToList())
+            {
+                var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, false);
+                movieDetail = await GetMovieDetailHelper(movie.MovieId);
+                if (movieDetail.MovieId == Guid.Empty)
+                {
+                    movieDetail.MovieId = movie.MovieId;
+                    movieDetail.MovieName = movie.MovieName;
+                    movieDetail.Duration = movie.Duration;
+                    movieDetail.ReleaseDate = movie.ReleaseDate;
+                    movieDetail.MovieDescription = movie.MovieDescription;
+                    movieDetail.Actor = movie.Actor;
+                    movieDetail.Image = movie.Image;
+                    movieDetail.Director = movie.Director;
+                }
+                movieDetailList.Add(movieDetail);
+            }
+  
+            return movieDetailList;
+        }
+
+        // Get all movies with type: IsShowing 
+        private async Task<List<MovieDto>> GetAllMovies()
+        {
+            var movies = await _repoMovie.GetAll();
+            foreach (var movie in movies)
+            {
+                int result = 0;
+                DateTime today = DateTime.Now;
+                DateTime realseDay = movie.ReleaseDate;
+                result = (int)(today - realseDay).TotalDays;
+                if (result<=14)
+                {
+                    movie.IsShowing = true;
+                }
+                else
+                {
+                    movie.IsShowing = false;
+                }
+            }
+            return movies.ToList();
+        } 
+
         #endregion
     }
 }
