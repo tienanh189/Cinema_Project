@@ -63,7 +63,6 @@ namespace CinemaAPI.Respositories
             if (showTime != null)
             {
                 showTime.ShowDate = dto.ShowDate;
-                showTime.ShowTimeDetail = dto.ShowTimeDetail;
                 showTime.MovieId = dto.MovieId;
                 showTime.RoomId = dto.RoomId;
                 showTime.Rooms = dto.Rooms;
@@ -71,6 +70,30 @@ namespace CinemaAPI.Respositories
                 showTime.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();
+            return _mapper.Map<ShowTimeDto>(showTime);
+        }
+
+        public async Task<ShowTimeDto> CreateAndCheck(ShowTimeDto dto)
+        {
+            var showTime = _mapper.Map<ShowTime>(dto);
+            showTime.ShowTimeId = Guid.NewGuid();
+            showTime.CreatedTime = DateTime.Now;
+            showTime.ModifiedTime = null;
+            showTime.DeletedTime = null;
+            showTime.CreatedByUser = null;
+            showTime.ModifiedByUser = null;
+            showTime.IsDeleted = false;
+
+            var check = _db.ShowTime.Where(x => x.MovieId == showTime.MovieId && x.RoomId == showTime.RoomId).ToList();
+            if(check != null)
+            {
+                _db.ShowTime.Add(showTime);
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+
+            }
             return _mapper.Map<ShowTimeDto>(showTime);
         }
     }

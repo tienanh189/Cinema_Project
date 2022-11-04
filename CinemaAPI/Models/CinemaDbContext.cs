@@ -24,5 +24,6 @@ namespace CinemaAPI.Models
         public DbSet<User> User { get; set; }
         public DbSet<UserGroup> UserGroup {get; set; }
         public DbSet<UserGroup_Permission> UserGroup_Permission { get; set; }
+        public DbSet<Shift> Shift { get; set; }
     }
 }

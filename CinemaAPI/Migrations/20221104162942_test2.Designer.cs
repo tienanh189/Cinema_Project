@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20221027132416_create")]
-    partial class create
+    [Migration("20221104162942_test2")]
+    partial class test2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -255,6 +255,9 @@ namespace CinemaAPI.Migrations
                     b.Property<int?>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -384,6 +387,9 @@ namespace CinemaAPI.Migrations
                     b.Property<string>("SeatName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
+
                     b.HasKey("SeatId");
 
                     b.HasIndex("CategorySeatId");
@@ -391,6 +397,41 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Seat");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.Shift", b =>
+                {
+                    b.Property<Guid>("ShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndShift")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartShift")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ShiftId");
+
+                    b.ToTable("Shift");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTime", b =>
@@ -424,9 +465,6 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ShowDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ShowTimeDetail")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ShowTimeId");
