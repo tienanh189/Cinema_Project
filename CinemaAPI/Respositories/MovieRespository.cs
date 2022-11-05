@@ -46,7 +46,7 @@ namespace CinemaAPI.Respositories
 
         public async Task<IQueryable<MovieDto>> GetAll()
         {
-            var movies = _db.Movie.Where(x => x.IsDeleted == false).AsEnumerable();
+            var movies = _db.Movie.Where(x => x.IsDeleted == false).OrderByDescending(x => x.CreatedTime).AsEnumerable();
             return _mapper.Map<List<MovieDto>>(movies).AsQueryable();
         }
 

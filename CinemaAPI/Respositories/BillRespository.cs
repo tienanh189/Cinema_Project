@@ -62,7 +62,6 @@ using Microsoft.EntityFrameworkCore;
             if (bill != null)
             {
                 bill.TotalAmount = dto.TotalAmount;
-                bill.DiscountId = dto.DiscountId;
                 bill.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();
