@@ -32,6 +32,7 @@ builder.Services.AddScoped<ICinemaRespository, CinemaRespository>();
 builder.Services.AddScoped<IMovieRespository, MovieRespository>();
 builder.Services.AddScoped<IShowTimeRespository, ShowTimeRespository>();
 builder.Services.AddScoped<ITicketRespository, TicketRespository>();
+builder.Services.AddScoped<IShiftRespository, ShiftRespository>();
 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

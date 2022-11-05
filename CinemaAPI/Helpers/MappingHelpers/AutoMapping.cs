@@ -34,6 +34,9 @@ namespace CinemaAPI.Helpers
 
             CreateMap<Ticket, TicketDto>();
             CreateMap<TicketDto, Ticket>();
+
+            CreateMap<Shift, ShiftDto>();
+            CreateMap<ShiftDto, Shift>();
         }
     }
 }
