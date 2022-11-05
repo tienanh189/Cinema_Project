@@ -63,7 +63,6 @@ namespace CinemaAPI.Respositories
             if (showTime != null)
             {
                 showTime.ShowDate = dto.ShowDate;
-                showTime.ShowTimeDetail = dto.ShowTimeDetail;
                 showTime.MovieId = dto.MovieId;
                 showTime.RoomId = dto.RoomId;
                 showTime.Rooms = dto.Rooms;

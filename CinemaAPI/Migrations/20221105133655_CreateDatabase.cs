@@ -5,10 +5,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CinemaAPI.Migrations
 {
-    public partial class create : Migration
+    public partial class CreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Bill",
+                columns: table => new
+                {
+                    BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TotalAmount = table.Column<float>(type: "real", nullable: false),
+                    CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bill", x => x.BillId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "CategoryMovie",
                 columns: table => new
@@ -64,25 +82,6 @@ namespace CinemaAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Discount",
-                columns: table => new
-                {
-                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DiscountName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DiscountDetail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Discount", x => x.DiscountId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Movie",
                 columns: table => new
                 {
@@ -93,6 +92,7 @@ namespace CinemaAPI.Migrations
                     Actor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Director = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -103,6 +103,26 @@ namespace CinemaAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movie", x => x.MovieId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "News",
+                columns: table => new
+                {
+                    NewId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NewTittle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_News", x => x.NewId);
                 });
 
             migrationBuilder.CreateTable(
@@ -121,6 +141,25 @@ namespace CinemaAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permission", x => x.PermissionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shift",
+                columns: table => new
+                {
+                    ShiftId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StartTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EndTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shift", x => x.ShiftId);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,31 +203,6 @@ namespace CinemaAPI.Migrations
                         column: x => x.CinemaId,
                         principalTable: "Cinema",
                         principalColumn: "CinemaId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bill",
-                columns: table => new
-                {
-                    BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TotalAmount = table.Column<float>(type: "real", nullable: false),
-                    DiscountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bill", x => x.BillId);
-                    table.ForeignKey(
-                        name: "FK_Bill_Discount_DiscountId",
-                        column: x => x.DiscountId,
-                        principalTable: "Discount",
-                        principalColumn: "DiscountId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -292,6 +306,7 @@ namespace CinemaAPI.Migrations
                 {
                     SeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SeatName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: true),
                     CategorySeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -324,7 +339,7 @@ namespace CinemaAPI.Migrations
                 {
                     ShowTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ShowDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ShowTimeDetail = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ShiftId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -348,6 +363,12 @@ namespace CinemaAPI.Migrations
                         column: x => x.RoomId,
                         principalTable: "Room",
                         principalColumn: "RoomId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShowTime_Shift_ShiftId",
+                        column: x => x.ShiftId,
+                        principalTable: "Shift",
+                        principalColumn: "ShiftId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -373,13 +394,13 @@ namespace CinemaAPI.Migrations
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShowTime_Seat_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,
                         principalTable: "ShowTime",
                         principalColumn: "ShowTimeId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -406,13 +427,13 @@ namespace CinemaAPI.Migrations
                         column: x => x.BillId,
                         principalTable: "Bill",
                         principalColumn: "BillId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ticket_Seat_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ticket_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,
@@ -420,11 +441,6 @@ namespace CinemaAPI.Migrations
                         principalColumn: "ShowTimeId",
                         onDelete: ReferentialAction.NoAction);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_DiscountId",
-                table: "Bill",
-                column: "DiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryMovie_Movie_CategoryMovieId",
@@ -460,6 +476,11 @@ namespace CinemaAPI.Migrations
                 name: "IX_ShowTime_RoomId",
                 table: "ShowTime",
                 column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowTime_ShiftId",
+                table: "ShowTime",
+                column: "ShiftId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShowTime_Seat_SeatId",
@@ -508,6 +529,9 @@ namespace CinemaAPI.Migrations
                 name: "CategoryMovie_Movie");
 
             migrationBuilder.DropTable(
+                name: "News");
+
+            migrationBuilder.DropTable(
                 name: "ShowTime_Seat");
 
             migrationBuilder.DropTable(
@@ -538,9 +562,6 @@ namespace CinemaAPI.Migrations
                 name: "UserGroup");
 
             migrationBuilder.DropTable(
-                name: "Discount");
-
-            migrationBuilder.DropTable(
                 name: "CategorySeat");
 
             migrationBuilder.DropTable(
@@ -548,6 +569,9 @@ namespace CinemaAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Room");
+
+            migrationBuilder.DropTable(
+                name: "Shift");
 
             migrationBuilder.DropTable(
                 name: "Cinema");

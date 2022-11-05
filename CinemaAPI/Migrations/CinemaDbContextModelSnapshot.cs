@@ -37,9 +37,6 @@ namespace CinemaAPI.Migrations
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DiscountId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -53,8 +50,6 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("BillId");
-
-                    b.HasIndex("DiscountId");
 
                     b.ToTable("Bill");
                 });
@@ -194,41 +189,6 @@ namespace CinemaAPI.Migrations
                     b.ToTable("Cinema");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.Discount", b =>
-                {
-                    b.Property<Guid>("DiscountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedByUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DiscountDetail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiscountName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("ModifiedByUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("DiscountId");
-
-                    b.ToTable("Discount");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Movie", b =>
                 {
                     b.Property<Guid>("MovieId")
@@ -277,6 +237,45 @@ namespace CinemaAPI.Migrations
                     b.HasKey("MovieId");
 
                     b.ToTable("Movie");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.New", b =>
+                {
+                    b.Property<Guid>("NewId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NewTittle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NewId");
+
+                    b.ToTable("News");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Permission", b =>
@@ -397,6 +396,43 @@ namespace CinemaAPI.Migrations
                     b.ToTable("Seat");
                 });
 
+            modelBuilder.Entity("CinemaAPI.Models.Shift", b =>
+                {
+                    b.Property<Guid>("ShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CreatedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedByUser")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ModifiedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StartTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ShiftId");
+
+                    b.ToTable("Shift");
+                });
+
             modelBuilder.Entity("CinemaAPI.Models.ShowTime", b =>
                 {
                     b.Property<Guid>("ShowTimeId")
@@ -427,10 +463,10 @@ namespace CinemaAPI.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ShowDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("ShiftId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ShowTimeDetail")
+                    b.Property<DateTime?>("ShowDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ShowTimeId");
@@ -438,6 +474,8 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("MovieId");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("ShiftId");
 
                     b.ToTable("ShowTime");
                 });
@@ -658,17 +696,6 @@ namespace CinemaAPI.Migrations
                     b.ToTable("UserGroup_Permission");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.Bill", b =>
-                {
-                    b.HasOne("CinemaAPI.Models.Discount", "Discounts")
-                        .WithMany("Bills")
-                        .HasForeignKey("DiscountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Discounts");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.CategoryMovie_Movie", b =>
                 {
                     b.HasOne("CinemaAPI.Models.CategoryMovie", "CategoryMovies")
@@ -732,9 +759,17 @@ namespace CinemaAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CinemaAPI.Models.Shift", "Shifts")
+                        .WithMany("ShowTimes")
+                        .HasForeignKey("ShiftId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Movies");
 
                     b.Navigation("Rooms");
+
+                    b.Navigation("Shifts");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTime_Seat", b =>
@@ -833,11 +868,6 @@ namespace CinemaAPI.Migrations
                     b.Navigation("Rooms");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.Discount", b =>
-                {
-                    b.Navigation("Bills");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Movie", b =>
                 {
                     b.Navigation("CategoryMovie_Movies");
@@ -858,6 +888,11 @@ namespace CinemaAPI.Migrations
             modelBuilder.Entity("CinemaAPI.Models.Seat", b =>
                 {
                     b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.Shift", b =>
+                {
+                    b.Navigation("ShowTimes");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTime", b =>
