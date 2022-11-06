@@ -161,6 +161,18 @@ namespace CinemaAPI.Controllers
                 movieDetail.Image = movie.Image;
                 movieDetail.Director = movie.Director;
                 movieDetail.ListCategoryMovieName.Add(movie.CategoryMovieName);
+            }         
+            if (movieDetail.MovieId == Guid.Empty)
+            {
+                MovieDto movie = await _repoMovie.GetById(Id);
+                movieDetail.MovieId = movie.MovieId;
+                movieDetail.MovieName = movie.MovieName;
+                movieDetail.Duration = movie.Duration;
+                movieDetail.ReleaseDate = movie.ReleaseDate;
+                movieDetail.MovieDescription = movie.MovieDescription;
+                movieDetail.Actor = movie.Actor;
+                movieDetail.Image = movie.Image;
+                movieDetail.Director = movie.Director;
             }
             return movieDetail;
         }
@@ -198,10 +210,10 @@ namespace CinemaAPI.Controllers
             foreach (var movie in movies)
             {
                 int result = 0;
-                DateTime today = DateTime.Now;
-                DateTime realseDay = movie.ReleaseDate;
+                DateTime today = DateTime.Now.Date;
+                DateTime realseDay = movie.ReleaseDate.Date;
                 result = (int)(today - realseDay).TotalDays;
-                if (result<=14)
+                if (result<=14 && result >= 0)
                 {
                     movie.IsShowing = true;
                 }
