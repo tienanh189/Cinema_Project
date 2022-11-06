@@ -11,5 +11,7 @@ namespace CinemaAPI.Respositories.Interface
         public Task<ShowTimeDto> Create(ShowTimeDto dto);
         public Task<ShowTimeDto> Update(Guid id, ShowTimeDto dto);
         public Task<bool> Delete(Guid id);
+
+        public Task<ShowTimeDto> CreateAndCheck(ShowTimeDto dto);
     }
 }
