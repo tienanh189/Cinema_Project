@@ -47,7 +47,7 @@ namespace CinemaAPI.Controllers
                 var shift = await _repo.Create(dto);
                 if(shift.ShiftId == Guid.Empty)
                 {
-                    return Ok("thua");
+                    return Ok("Create Failed");
                 }
                 return Ok(shift);
             }
@@ -69,7 +69,7 @@ namespace CinemaAPI.Controllers
                 var shift = await _repo.Update(id, dto);
                 if (shift.ShiftId == Guid.Empty)
                 {
-                    return Ok("update cc");
+                    return Ok("Update Failed");
                 }
                 return Ok(shift);
             }

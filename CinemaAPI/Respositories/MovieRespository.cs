@@ -67,6 +67,8 @@ namespace CinemaAPI.Respositories
                 movie.Actor = dto.Actor;
                 movie.Director = dto.Director;
                 movie.ReleaseDate = dto.ReleaseDate;
+                movie.EndShowDate = dto.EndShowDate;
+                movie.Image = dto.Image;
                 movie.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();

@@ -149,7 +149,7 @@ namespace CinemaAPI.Controllers
                                    CategoryMovieName = cm.CategoryMovieName
                                };
             //6e1a8cd3-ecbe-40d7-950b-6757abbbfa10
-            var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, false);
+            var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now,DateTime.Now, false);
             foreach (var movie in movieDetails)
             {
                 movieDetail.MovieId = movie.MovieId;
@@ -184,7 +184,7 @@ namespace CinemaAPI.Controllers
             var movieDetailList = new List<MovieDetail>();
             foreach (var movie in movies.ToList())
             {
-                var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, false);
+                var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, DateTime.Now, false);
                 movieDetail = await GetMovieDetailHelper(movie.MovieId);
                 if (movieDetail.MovieId == Guid.Empty)
                 {
@@ -196,6 +196,19 @@ namespace CinemaAPI.Controllers
                     movieDetail.Actor = movie.Actor;
                     movieDetail.Image = movie.Image;
                     movieDetail.Director = movie.Director;
+                }
+                DateTime today = DateTime.Now.Date;
+                DateTime realseDay = movie.ReleaseDate.Date;
+                DateTime endDate = movie.EndShowDate.Date;
+                int timeStart = (int)(today - realseDay).TotalDays;
+                int timeEnd = (int)(endDate - today).TotalDays;
+                if (timeStart >= 0 && timeEnd >= 0)
+                {
+                    movieDetail.IsShowing = true;
+                }
+                else
+                {
+                    movieDetail.IsShowing = false;
                 }
                 movieDetailList.Add(movieDetail);
             }
@@ -209,11 +222,12 @@ namespace CinemaAPI.Controllers
             var movies = await _repoMovie.GetAll();
             foreach (var movie in movies)
             {
-                int result = 0;
                 DateTime today = DateTime.Now.Date;
                 DateTime realseDay = movie.ReleaseDate.Date;
-                result = (int)(today - realseDay).TotalDays;
-                if (result<=14 && result >= 0)
+                DateTime endDate = movie.EndShowDate.Date;
+                int timeStart = (int)(today - realseDay).TotalDays;
+                int timeEnd = (int)(endDate - today).TotalDays;
+                if ( timeStart >=0 &&  timeEnd>= 0)
                 {
                     movie.IsShowing = true;
                 }

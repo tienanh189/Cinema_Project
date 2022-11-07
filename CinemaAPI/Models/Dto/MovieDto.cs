@@ -13,12 +13,13 @@ namespace CinemaAPI.Models.Dto
         public string? Director { get; set; }
         public string? Image { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public DateTime EndShowDate { get; set; }
         public bool? IsShowing { get; set; }
     }
 
     public class MovieDetail : MovieDto
     {  
-        public MovieDetail(Guid movieId, string? movieName, string? movieDescription, int? duration, string? actor, string? director, string? image, DateTime releaseDate, bool? isShowing) 
+        public MovieDetail(Guid movieId, string? movieName, string? movieDescription, int? duration, string? actor, string? director, string? image, DateTime releaseDate,DateTime endDate, bool? isShowing) 
         {
 
             MovieId = movieId;
@@ -29,6 +30,7 @@ namespace CinemaAPI.Models.Dto
             Director = director;
             Image = image;
             ReleaseDate = releaseDate;
+            EndShowDate = endDate;
             IsShowing = isShowing;
             this.ListCategoryMovieName = new List<string>();
         }

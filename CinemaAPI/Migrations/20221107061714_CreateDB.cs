@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CinemaAPI.Migrations
 {
-    public partial class Test : Migration
+    public partial class CreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -91,7 +91,8 @@ namespace CinemaAPI.Migrations
                     Duration = table.Column<int>(type: "int", nullable: true),
                     Actor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Director = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndShowDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -394,7 +395,7 @@ namespace CinemaAPI.Migrations
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ShowTime_Seat_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,
@@ -427,13 +428,13 @@ namespace CinemaAPI.Migrations
                         column: x => x.BillId,
                         principalTable: "Bill",
                         principalColumn: "BillId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ticket_Seat_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ticket_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,

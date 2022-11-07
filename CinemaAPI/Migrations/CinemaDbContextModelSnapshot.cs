@@ -213,6 +213,9 @@ namespace CinemaAPI.Migrations
                     b.Property<int?>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("EndShowDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -231,7 +234,7 @@ namespace CinemaAPI.Migrations
                     b.Property<string>("MovieName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ReleaseDate")
+                    b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("MovieId");
