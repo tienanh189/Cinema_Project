@@ -48,7 +48,7 @@ namespace CinemaAPI.Respositories
 
         public async Task<IQueryable<SeatDto>> GetAll()
         {
-            var seat = _db.Seat.Where(x => x.IsDeleted == false).AsEnumerable();
+            var seat = _db.Seat.Where(x => x.IsDeleted == false).OrderBy(x => x.SeatName).AsEnumerable();
             return _mapper.Map<List<SeatDto>>(seat).AsQueryable();
         }
 

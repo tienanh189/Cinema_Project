@@ -65,8 +65,6 @@ namespace CinemaAPI.Respositories
                 showTime.ShowDate = dto.ShowDate;
                 showTime.MovieId = dto.MovieId;
                 showTime.RoomId = dto.RoomId;
-                showTime.Rooms = dto.Rooms;
-                showTime.Movies = dto.Movies;
                 showTime.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();

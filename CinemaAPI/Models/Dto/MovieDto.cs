@@ -8,7 +8,7 @@ namespace CinemaAPI.Models.Dto
         public Guid MovieId { get; set; }
         public string? MovieName { get; set; }
         public string? MovieDescription { get; set; }
-        public int? Duration { get; set; }
+        public int Duration { get; set; }
         public string? Actor { get; set; }
         public string? Director { get; set; }
         public string? Image { get; set; }
@@ -19,7 +19,7 @@ namespace CinemaAPI.Models.Dto
 
     public class MovieDetail : MovieDto
     {  
-        public MovieDetail(Guid movieId, string? movieName, string? movieDescription, int? duration, string? actor, string? director, string? image, DateTime releaseDate,DateTime endDate, bool? isShowing) 
+        public MovieDetail(Guid movieId, string? movieName, string? movieDescription, int duration, string? actor, string? director, string? image, DateTime releaseDate,DateTime endDate, bool? isShowing) 
         {
 
             MovieId = movieId;

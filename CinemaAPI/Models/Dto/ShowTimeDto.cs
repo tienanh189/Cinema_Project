@@ -7,10 +7,14 @@ namespace CinemaAPI.Models.Dto
     {
         public Guid ShowTimeId { get; set; }
         public DateTime? ShowDate { get; set; }
-        public DateTime? ShowTimeDetail { get; set; }
+        public Guid ShiftId { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public Guid MovieId { get; set; }
+        public string MovieName { get; set; }
         public Guid RoomId { get; set; }
-        public Movie Movies { get; set; }
-        public Room Rooms { get; set; }
+        public int Duration { get; set; }
+        public string RoomName { get; set; }
+
     }
 }

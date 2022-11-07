@@ -103,6 +103,7 @@ namespace CinemaAPI.Controllers
         }
 
         #region API Helpers
+        //54a9c024-a90f-41b1-9540-41d4bda61e7c
         private async Task<List<DetailSeat>> GetDetailAllSeats(Guid showTimeId)
         {
             var seatList = new List<DetailSeat>();
@@ -118,23 +119,38 @@ namespace CinemaAPI.Controllers
                             {
                                 Id = s.SeatId,
                             };
-
-            foreach (var seat in seats)
+            if(seatQuery != null)
             {
-                var detailSeat = new DetailSeat();
-                detailSeat.SeatId = seat.SeatId;
-                detailSeat.RoomId = seat.RoomId;
-                detailSeat.IsSelected = false;
-                detailSeat.SeatName = seat.SeatName;
-                foreach (var seatQ in seatQuery)
+                foreach (var seat in seats)
                 {
-                    if (seat.SeatId == seatQ.Id)
+                    var detailSeat = new DetailSeat();
+                    detailSeat.SeatId = seat.SeatId;
+                    detailSeat.RoomId = seat.RoomId;
+                    detailSeat.IsSelected = false;
+                    detailSeat.SeatName = seat.SeatName;
+                    foreach (var seatQ in seatQuery)
                     {
-                        detailSeat.IsSelected = true;
+                        if (seat.SeatId == seatQ.Id)
+                        {
+                            detailSeat.IsSelected = true;
+                        }
                     }
+                    seatList.Add(detailSeat);
                 }
-                seatList.Add(detailSeat);
             }
+            else
+            {
+                foreach (var seat in seats)
+                {
+                    var detailSeat = new DetailSeat();
+                    detailSeat.SeatId = seat.SeatId;
+                    detailSeat.RoomId = seat.RoomId;
+                    detailSeat.IsSelected = false;
+                    detailSeat.SeatName = seat.SeatName;               
+                    seatList.Add(detailSeat);
+                }
+            }
+            
             return seatList;
         }
         #endregion
