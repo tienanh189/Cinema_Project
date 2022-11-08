@@ -48,7 +48,7 @@ namespace CinemaAPI.Controllers
             }
         }
 
-        [HttpGet("admin")]
+        [HttpGet("getall")]
         public async Task<IActionResult> GetAllMoviesWithCategory()
         {
             try
@@ -146,12 +146,14 @@ namespace CinemaAPI.Controllers
                                    Description = m.MovieDescription,
                                    ReleaseDate = m.ReleaseDate,
                                    Image = m.Image,
+                                   CategoryMovieId = cm.CategoryMovieId,
                                    CategoryMovieName = cm.CategoryMovieName
                                };
             //6e1a8cd3-ecbe-40d7-950b-6757abbbfa10
             var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now,DateTime.Now, false);
             foreach (var movie in movieDetails)
             {
+                var cateM = new CategoryMovieDto();
                 movieDetail.MovieId = movie.MovieId;
                 movieDetail.MovieName = movie.MovieName;
                 movieDetail.Duration = movie.Duration;
@@ -160,7 +162,9 @@ namespace CinemaAPI.Controllers
                 movieDetail.Actor = movie.Actor;
                 movieDetail.Image = movie.Image;
                 movieDetail.Director = movie.Director;
-                movieDetail.ListCategoryMovieName.Add(movie.CategoryMovieName);
+                cateM.CategoryMovieId = movie.CategoryMovieId;  
+                cateM.CategoryMovieName = movie.CategoryMovieName;
+                movieDetail.ListCategoryMovieName.Add(cateM);
             }         
             if (movieDetail.MovieId == Guid.Empty)
             {
