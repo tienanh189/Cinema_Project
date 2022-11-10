@@ -32,8 +32,8 @@ namespace CinemaAPI.Models.Dto
             ReleaseDate = releaseDate;
             EndShowDate = endDate;
             IsShowing = isShowing;
-            this.ListCategoryMovieName = new List<CategoryMovieDto>();
+            this.CategoryMovies = new List<CategoryMovieDto>();
         }
-        public List<CategoryMovieDto> ListCategoryMovieName { get; set; }
+        public List<CategoryMovieDto> CategoryMovies { get; set; }
     }
 }
