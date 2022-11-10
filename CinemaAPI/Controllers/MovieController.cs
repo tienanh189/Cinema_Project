@@ -76,7 +76,7 @@ namespace CinemaAPI.Controllers
             return movie == null ? NotFound() : Ok(movie);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(MovieDto dto)
         {
             try
@@ -124,6 +124,25 @@ namespace CinemaAPI.Controllers
 
 
         #region API Helers
+        //Create new movie
+        private async Task<MovieDetail> CreateNewMovie(MovieDetail input)
+        {
+            if (input.MovieId == Guid.Empty)
+            {
+                var movies = await _repoMovie.GetAll();
+                movies = movies.Where(x => x.MovieName == input.MovieName && x.Director == input.Director);
+                if (movies!=null)
+                {
+                    
+                }
+
+            }
+            else
+            {
+
+            }
+            return input;
+        }
 
         //Get a movie detail
         private async Task<MovieDetail> GetMovieDetailHelper(Guid Id)
@@ -164,7 +183,7 @@ namespace CinemaAPI.Controllers
                 movieDetail.Director = movie.Director;
                 cateM.CategoryMovieId = movie.CategoryMovieId;  
                 cateM.CategoryMovieName = movie.CategoryMovieName;
-                movieDetail.ListCategoryMovieName.Add(cateM);
+                movieDetail.CategoryMovies.Add(cateM);
             }         
             if (movieDetail.MovieId == Guid.Empty)
             {
