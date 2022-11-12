@@ -48,7 +48,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTicketDto dto)
+        public async Task<IActionResult> Create(BillDetailDto dto)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace CinemaAPI.Controllers
 
         #region
 
-        private async Task<CreateTicketDto> CreateTicket(CreateTicketDto input)
+        private async Task<BillDetailDto> CreateTicket(BillDetailDto input)
         {
             var categorySeat = await _repoCategorySeat.GetAll();
             foreach (var seatDetail in input.ListSeat)
