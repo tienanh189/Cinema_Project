@@ -48,8 +48,8 @@ namespace CinemaAPI.Controllers
         }
 
 
-        [HttpPost("Bill")]
-        public async Task<IActionResult> GetBillDetail([FromBody]BookingTicketDto dto)
+        [HttpPost("getBill")]
+        public async Task<IActionResult> GetBillDetail([FromBody]BillDetailDto dto)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace CinemaAPI.Controllers
         }
 
         #region
-        private async Task<BillDetailDto> GetDetailBill(BookingTicketDto input)
+        private async Task<BillDetailDto> GetDetailBill(BillDetailDto input)
         {
             var newBill = new BillDetailDto();
             var bill = new BillDto();      
