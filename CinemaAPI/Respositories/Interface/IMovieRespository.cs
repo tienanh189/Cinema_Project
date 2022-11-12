@@ -9,6 +9,7 @@ namespace CinemaAPI.Respositories.Interface
         public Task<IQueryable<MovieDto>> GetAll();
         public Task<MovieDto> GetById(Guid id);
         public Task<MovieDto> Create(MovieDto dto);
+        public Task<Guid> CreateAndReturnId(MovieDto dto);
         public Task<MovieDto> Update(Guid id, MovieDto dto);
         public Task<bool> Delete(Guid id);
     }

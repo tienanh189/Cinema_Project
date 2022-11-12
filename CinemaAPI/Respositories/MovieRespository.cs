@@ -31,6 +31,21 @@ namespace CinemaAPI.Respositories
             return _mapper.Map<MovieDto>(movie);
         }
 
+        public async Task<Guid> CreateAndReturnId(MovieDto dto)
+        {
+            var movie = _mapper.Map<Movie>(dto);
+            movie.MovieId = Guid.NewGuid();
+            movie.CreatedTime = DateTime.Now;
+            movie.ModifiedTime = null;
+            movie.DeletedTime = null;
+            movie.CreatedByUser = null;
+            movie.ModifiedByUser = null;
+            movie.IsDeleted = false;
+            _db.Movie.Add(movie);
+            await _db.SaveChangesAsync();
+            return movie.MovieId;
+        }
+
         public async Task<bool> Delete(Guid id)
         {
             var movie = await _db.Movie.FindAsync(id);

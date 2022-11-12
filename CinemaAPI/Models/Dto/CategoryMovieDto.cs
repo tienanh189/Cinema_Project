@@ -8,4 +8,10 @@ namespace CinemaAPI.Models.Dto
         public Guid CategoryMovieId { get; set; }
         public string? CategoryMovieName { get; set; }
     }
+
+    public class CreateCategoryMovie
+    {
+        public Guid CategoryMovieId { get; set; }
+        public string? CategoryMovieName { get; set; }
+    }
 }

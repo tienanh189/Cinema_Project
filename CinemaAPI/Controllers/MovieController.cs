@@ -90,6 +90,20 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpPost("Save")]
+        public async Task<IActionResult> SaveMovie(CreateMovieDto dto)
+        {
+            try
+            {
+                var movie = await CreateOrUpdateMovie(dto);
+                return Ok(movie);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut("id")]
         public async Task<IActionResult> Update(Guid id, [FromBody] MovieDto dto)
         {
@@ -122,24 +136,63 @@ namespace CinemaAPI.Controllers
             }
         }
 
-
         #region API Helers
         //Create new movie
-        private async Task<MovieDetail> CreateNewMovie(MovieDetail input)
+        private async Task<CreateMovieDto> CreateOrUpdateMovie(CreateMovieDto input)
         {
             if (input.MovieId == Guid.Empty)
             {
                 var movies = await _repoMovie.GetAll();
                 movies = movies.Where(x => x.MovieName == input.MovieName && x.Director == input.Director);
-                if (movies!=null)
+                if (movies != null)
                 {
-                    
-                }
+                    var newMovie = new MovieDto();
+                    newMovie.MovieName = input.MovieName;
+                    newMovie.MovieDescription = input.MovieDescription;
+                    newMovie.Duration = input.Duration;
+                    newMovie.Actor = input.Actor;
+                    newMovie.Director = input.Director;
+                    newMovie.ReleaseDate = input.ReleaseDate;
+                    newMovie.EndShowDate = input.EndShowDate;
+                    newMovie.Image = input.Image;
+                    newMovie.MovieId = await _repoMovie.CreateAndReturnId(newMovie);
 
+                    foreach (var category in input.CategoryMovies)
+                    {
+                        var cateM_M = new CategoryMovie_MovieDto();
+                        cateM_M.MovieId = newMovie.MovieId;
+                        cateM_M.CategoryMovieId = category.CategoryMovieId;
+                        await _categoryMovie_Movie.Create(cateM_M);
+                    }
+                }
             }
             else
             {
+                var cateM_M = await _categoryMovie_Movie.GetAll();
+                cateM_M = cateM_M.Where(x => x.MovieId == input.MovieId);
+                var newMovie = new MovieDto();
+                newMovie.MovieName = input.MovieName;
+                newMovie.MovieDescription = input.MovieDescription;
+                newMovie.Duration = input.Duration;
+                newMovie.Actor = input.Actor;
+                newMovie.Director = input.Director;
+                newMovie.ReleaseDate = input.ReleaseDate;
+                newMovie.EndShowDate = input.EndShowDate;
+                newMovie.Image = input.Image;
+                await _repoMovie.Update(input.MovieId, newMovie);
 
+                foreach (var category in cateM_M)
+                {
+                    await _categoryMovie_Movie.Delete(category.Id);
+                }
+
+                foreach (var category in input.CategoryMovies)
+                {
+                    var newcateM_M = new CategoryMovie_MovieDto();
+                    newcateM_M.MovieId = input.MovieId;
+                    newcateM_M.CategoryMovieId = category.CategoryMovieId;
+                    await _categoryMovie_Movie.Create(newcateM_M);
+                }
             }
             return input;
         }

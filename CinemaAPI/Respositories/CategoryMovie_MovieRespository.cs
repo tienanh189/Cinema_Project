@@ -63,7 +63,7 @@ namespace CinemaAPI.Respositories
             var categoryM_M = await _db.CategoryMovie_Movie.FindAsync(id);
             if (categoryM_M != null)
             {
-                categoryM_M.MovieId= dto.MovieId;
+                categoryM_M.MovieId = dto.MovieId;
                 categoryM_M.CategoryMovieId = dto.CategoryMovieId;
                 categoryM_M.ModifiedTime = DateTime.Now;
             }

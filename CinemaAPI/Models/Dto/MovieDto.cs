@@ -36,4 +36,14 @@ namespace CinemaAPI.Models.Dto
         }
         public List<CategoryMovieDto> CategoryMovies { get; set; }
     }
+
+    public class CreateMovieDto : MovieDto
+    { 
+        public CreateMovieDto()
+        {
+            CategoryMovies = new List<CreateCategoryMovie>();
+        }
+
+        public List<CreateCategoryMovie> CategoryMovies { get; set; }
+    }
 }

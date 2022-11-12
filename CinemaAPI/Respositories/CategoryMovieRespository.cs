@@ -64,7 +64,6 @@ namespace CinemaAPI.Respositories
             if (categoryMovie != null)
             {
                 categoryMovie.CategoryMovieName = dto.CategoryMovieName;
-                categoryMovie.IsDeleted = dto.IsDeleted;
                 categoryMovie.ModifiedTime = DateTime.Now;
             }
             _db.CategoryMovie.Update(categoryMovie);
