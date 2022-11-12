@@ -7,5 +7,7 @@ namespace CinemaAPI.Models.Dto
     {
         public Guid CategorySeatId { get; set; }
         public string? CategorySeatName { get; set; }
+        public float Price { get; set; }
+
     }
 }

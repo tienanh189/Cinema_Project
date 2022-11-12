@@ -30,6 +30,20 @@ using Microsoft.EntityFrameworkCore;
             await _db.SaveChangesAsync();
             return _mapper.Map<BillDto>(bill);
         }
+        public async Task<Guid> CreatAndReturnId(BillDto dto)
+        {
+            var bill = _mapper.Map<Bill>(dto);
+            bill.BillId = Guid.NewGuid();
+            bill.CreatedTime = DateTime.Now;
+            bill.ModifiedTime = null;
+            bill.DeletedTime = null;
+            bill.CreatedByUser = null;
+            bill.ModifiedByUser = null;
+            bill.IsDeleted = false;
+            _db.Bill.Add(bill);
+            await _db.SaveChangesAsync();
+            return bill.BillId;
+        }
 
         public async Task<bool> Delete(Guid id)
         {

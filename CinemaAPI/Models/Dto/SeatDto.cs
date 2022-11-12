@@ -18,6 +18,14 @@ namespace CinemaAPI.Models.Dto
         {
 
         }
+        public float Price { get; set; }
         public bool IsSelected { get; set; }
+    }
+
+    public class SeatOnBillDto
+    {
+        public Guid SeatId { get;set; }
+        public string? SeatName { get;set; }
+        public float Price { get; set; }
     }
 }

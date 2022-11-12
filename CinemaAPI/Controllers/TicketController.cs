@@ -1,4 +1,5 @@
 ﻿using CinemaAPI.Helpers;
+using CinemaAPI.Models;
 using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,18 @@ namespace CinemaAPI.Controllers
     public class TicketController : _ControllerBase
     {
         private readonly ITicketRespository _repo;
+        private readonly IBillRespository _repoBill;
+        private readonly ICategorySeatRespository _repoCategorySeat;
+        private readonly ISeatRespository _repoSeat;
+        private readonly ICinemaRespository _repoCinema;
 
-        public TicketController(ITicketRespository repo)
+        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat, ISeatRespository repoSeat, ICinemaRespository repoCinema)
         {
             _repo = repo;
+            _repoBill = repoBill;
+            _repoCategorySeat = repoCategorySeat;
+            _repoSeat = repoSeat;
+            _repoCinema = repoCinema;
         }
 
         [HttpGet]
@@ -39,11 +48,11 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TicketDto dto)
+        public async Task<IActionResult> Create(CreateTicketDto dto)
         {
             try
             {
-                var ticket = await _repo.Create(dto);
+                var ticket = await CreateTicket(dto);
                 return Ok(ticket);
             }
             catch (Exception e)
@@ -83,5 +92,25 @@ namespace CinemaAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        #region
+
+        private async Task<CreateTicketDto> CreateTicket(CreateTicketDto input)
+        {
+            var categorySeat = await _repoCategorySeat.GetAll();
+            foreach (var seatDetail in input.ListSeat)
+            {
+                var ticket = new TicketDto();
+                ticket.BillId = input.BillId;
+                ticket.ShowTimeId = input.ShowTimeId;
+                ticket.Price = seatDetail.Price;
+                ticket.SeatId = seatDetail.SeatId;
+                await _repo.Create(ticket);
+            }     
+            return input;
+        }
+
+
+        #endregion
     }
 }

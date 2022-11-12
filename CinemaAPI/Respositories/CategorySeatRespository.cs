@@ -64,6 +64,7 @@ namespace CinemaAPI.Respositories
             if (categorySeat != null)
             {
                 categorySeat.CategorySeatName = dto.CategorySeatName;
+                categorySeat.Price= dto.Price;
                 categorySeat.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();

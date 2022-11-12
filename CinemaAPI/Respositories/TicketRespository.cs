@@ -63,11 +63,8 @@ namespace CinemaAPI.Respositories
             if (ticket != null)
             {
                 ticket.ShowTimeId = dto.ShowTimeId;
-                ticket.ShowTimes = dto.ShowTimes;
                 ticket.BillId = dto.BillId;
-                ticket.Bills = dto.Bills;
                 ticket.SeatId = dto.SeatId;
-                ticket.Seats = dto.Seats;
                 ticket.Price = dto.Price;
                 ticket.ModifiedTime = DateTime.Now;
             }
