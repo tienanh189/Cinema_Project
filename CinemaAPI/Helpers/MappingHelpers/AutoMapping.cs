@@ -18,8 +18,6 @@ namespace CinemaAPI.Helpers
             CreateMap<Bill, BillDto>();
             CreateMap<CategoryMovie_MovieDto, CategoryMovie_Movie>();
             CreateMap<CategoryMovie_Movie, CategoryMovie_MovieDto>();
-            CreateMap<ShowTime_SeatDto, ShowTime_Seat>();
-            CreateMap<ShowTime_Seat, ShowTime_SeatDto>();
             CreateMap<Room, RoomDto>();
             CreateMap<RoomDto, Room>();
             CreateMap<Cinema, CinemaDto>();

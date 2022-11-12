@@ -19,7 +19,6 @@ namespace CinemaAPI.Models
         public DbSet<Room> Room { get; set; }
         public DbSet<Seat> Seat { get; set; }
         public DbSet<ShowTime> ShowTime { get; set; }
-        public DbSet<ShowTime_Seat> ShowTime_Seat { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserGroup> UserGroup {get; set; }

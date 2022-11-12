@@ -10,7 +10,6 @@
         public Movie Movies { get; set; }
         public Guid RoomId { get; set; }
         public Room Rooms { get; set; }
-        public ICollection<ShowTime_Seat> ShowTime_Seats { get; set; }
         public ICollection<Ticket> Tickets { get; set; }
 
     }

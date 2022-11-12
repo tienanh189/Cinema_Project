@@ -221,7 +221,6 @@ namespace CinemaAPI.Controllers
                                    CategoryMovieId = cm.CategoryMovieId,
                                    CategoryMovieName = cm.CategoryMovieName
                                };
-            //6e1a8cd3-ecbe-40d7-950b-6757abbbfa10
             var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now,DateTime.Now, false);
             foreach (var movie in movieDetails)
             {
@@ -249,6 +248,19 @@ namespace CinemaAPI.Controllers
                 movieDetail.Actor = movie.Actor;
                 movieDetail.Image = movie.Image;
                 movieDetail.Director = movie.Director;
+            }
+            DateTime today = DateTime.Now.Date;
+            DateTime realseDay = movieDetail.ReleaseDate.Date;
+            DateTime endDate = movieDetail.EndShowDate.Date;
+            int timeStart = (int)(today - realseDay).TotalDays;
+            int timeEnd = (int)(endDate - today).TotalDays;
+            if (timeStart >= 0 && timeEnd >= 0)
+            {
+                movieDetail.IsShowing = true;
+            }
+            else
+            {
+                movieDetail.IsShowing = false;
             }
             return movieDetail;
         }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CinemaAPI.Migrations
 {
-    public partial class create : Migration
+    public partial class CreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,6 +14,7 @@ namespace CinemaAPI.Migrations
                 columns: table => new
                 {
                     BillId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsPayed = table.Column<bool>(type: "bit", nullable: false),
                     TotalAmount = table.Column<float>(type: "real", nullable: false),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -51,6 +52,7 @@ namespace CinemaAPI.Migrations
                 {
                     CategorySeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategorySeatName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<double>(type: "float", nullable: false),
                     CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -107,7 +109,7 @@ namespace CinemaAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "News",
+                name: "New",
                 columns: table => new
                 {
                     NewId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -123,7 +125,7 @@ namespace CinemaAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_News", x => x.NewId);
+                    table.PrimaryKey("PK_New", x => x.NewId);
                 });
 
             migrationBuilder.CreateTable(
@@ -374,37 +376,6 @@ namespace CinemaAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShowTime_Seat",
-                columns: table => new
-                {
-                    ShowTime_SeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ShowTimeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SeatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedByUser = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShowTime_Seat", x => x.ShowTime_SeatId);
-                    table.ForeignKey(
-                        name: "FK_ShowTime_Seat_Seat_SeatId",
-                        column: x => x.SeatId,
-                        principalTable: "Seat",
-                        principalColumn: "SeatId",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_ShowTime_Seat_ShowTime_ShowTimeId",
-                        column: x => x.ShowTimeId,
-                        principalTable: "ShowTime",
-                        principalColumn: "ShowTimeId",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Ticket",
                 columns: table => new
                 {
@@ -428,13 +399,13 @@ namespace CinemaAPI.Migrations
                         column: x => x.BillId,
                         principalTable: "Bill",
                         principalColumn: "BillId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ticket_Seat_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ticket_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,
@@ -484,16 +455,6 @@ namespace CinemaAPI.Migrations
                 column: "ShiftId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShowTime_Seat_SeatId",
-                table: "ShowTime_Seat",
-                column: "SeatId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShowTime_Seat_ShowTimeId",
-                table: "ShowTime_Seat",
-                column: "ShowTimeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ticket_BillId",
                 table: "Ticket",
                 column: "BillId");
@@ -530,10 +491,7 @@ namespace CinemaAPI.Migrations
                 name: "CategoryMovie_Movie");
 
             migrationBuilder.DropTable(
-                name: "News");
-
-            migrationBuilder.DropTable(
-                name: "ShowTime_Seat");
+                name: "New");
 
             migrationBuilder.DropTable(
                 name: "Ticket");

@@ -17,12 +17,12 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] Pagination pagination)
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var new_ = await _repo.GetAll();
-                return Ok(await GetPaginatedResponse(new_, pagination));
+                var _new = await _repo.GetAll();
+                return Ok(_new.ToList());
             }
             catch (Exception e)
             {
@@ -33,8 +33,8 @@ namespace CinemaAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var new_ = await _repo.GetById(id);
-            return new_ == null ? NotFound() : Ok(new_);
+            var _new = await _repo.GetById(id);
+            return _new == null ? NotFound() : Ok(_new);
         }
 
         [HttpPost]
@@ -42,8 +42,8 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var new_ = await _repo.Create(dto);
-                return Ok(new_);
+                var _new = await _repo.Create(dto);
+                return Ok(_new);
             }
             catch (Exception e)
             {
@@ -60,8 +60,8 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var new_ = await _repo.Update(id, dto);
-                return Ok(new_);
+                var _new = await _repo.Update(id, dto);
+                return Ok(_new);
             }
             catch (Exception e)
             {

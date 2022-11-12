@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(CinemaDbContext))]
-    [Migration("20221109013947_create")]
-    partial class create
+    [Migration("20221112154347_CreateDB")]
+    partial class CreateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,6 +40,9 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPayed")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("ModifiedByUser")
@@ -153,6 +156,9 @@ namespace CinemaAPI.Migrations
 
                     b.Property<DateTime?>("ModifiedTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.HasKey("CategorySeatId");
 
@@ -280,7 +286,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("NewId");
 
-                    b.ToTable("News");
+                    b.ToTable("New");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Permission", b =>
@@ -483,45 +489,6 @@ namespace CinemaAPI.Migrations
                     b.HasIndex("ShiftId");
 
                     b.ToTable("ShowTime");
-                });
-
-            modelBuilder.Entity("CinemaAPI.Models.ShowTime_Seat", b =>
-                {
-                    b.Property<Guid>("ShowTime_SeatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedByUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("ModifiedByUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ModifiedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("SeatId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ShowTimeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ShowTime_SeatId");
-
-                    b.HasIndex("SeatId");
-
-                    b.HasIndex("ShowTimeId");
-
-                    b.ToTable("ShowTime_Seat");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Ticket", b =>
@@ -777,25 +744,6 @@ namespace CinemaAPI.Migrations
                     b.Navigation("Shifts");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.ShowTime_Seat", b =>
-                {
-                    b.HasOne("CinemaAPI.Models.Seat", "Seats")
-                        .WithMany()
-                        .HasForeignKey("SeatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CinemaAPI.Models.ShowTime", "ShowTimes")
-                        .WithMany("ShowTime_Seats")
-                        .HasForeignKey("ShowTimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Seats");
-
-                    b.Navigation("ShowTimes");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Ticket", b =>
                 {
                     b.HasOne("CinemaAPI.Models.Bill", "Bills")
@@ -902,8 +850,6 @@ namespace CinemaAPI.Migrations
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTime", b =>
                 {
-                    b.Navigation("ShowTime_Seats");
-
                     b.Navigation("Tickets");
                 });
 

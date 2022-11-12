@@ -26,7 +26,6 @@ builder.Services.AddScoped<ICategorySeatRespository, CategorySeatRespository>();
 builder.Services.AddScoped<ISeatRespository, SeatRespository>();
 builder.Services.AddScoped<IBillRespository, BillRespository>();
 builder.Services.AddScoped<ICategoryMovie_MovieRespository, CategoryMovie_MovieRespository>();
-builder.Services.AddScoped<IShowTime_SeatRespository, ShowTime_SeatRespository>();
 builder.Services.AddScoped<IRoomRespository, RoomRespository>();
 builder.Services.AddScoped<ICinemaRespository, CinemaRespository>();
 builder.Services.AddScoped<IMovieRespository, MovieRespository>();
