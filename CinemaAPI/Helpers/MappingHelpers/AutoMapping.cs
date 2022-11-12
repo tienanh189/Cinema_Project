@@ -37,6 +37,9 @@ namespace CinemaAPI.Helpers
 
             CreateMap<Shift, ShiftDto>();
             CreateMap<ShiftDto, Shift>();
+
+            CreateMap<New, NewDto>();
+            CreateMap<NewDto, New>();
         }
     }
 }

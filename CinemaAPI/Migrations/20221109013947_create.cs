@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CinemaAPI.Migrations
 {
-    public partial class CreateDB : Migration
+    public partial class create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -395,7 +395,7 @@ namespace CinemaAPI.Migrations
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_ShowTime_Seat_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,
@@ -428,13 +428,13 @@ namespace CinemaAPI.Migrations
                         column: x => x.BillId,
                         principalTable: "Bill",
                         principalColumn: "BillId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Ticket_Seat_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seat",
                         principalColumn: "SeatId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Ticket_ShowTime_ShowTimeId",
                         column: x => x.ShowTimeId,
