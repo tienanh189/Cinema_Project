@@ -83,6 +83,7 @@ builder.Services.AddScoped<ITicketRespository, TicketRespository>();
 builder.Services.AddScoped<IShiftRespository, ShiftRespository>();
 builder.Services.AddScoped<INewRespository, NewRespository>();
 builder.Services.AddScoped<IAccountRespository,AccountRespository>();
+builder.Services.AddScoped<IRoleRespository, RoleRespository>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>

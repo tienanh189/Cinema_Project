@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace CinemaAPI.Models.Dto
 {
@@ -14,5 +15,7 @@ namespace CinemaAPI.Models.Dto
         public string Password { get; set; }
         [Required]
         public string ConFirmPassword { get; set; }
+        public List<string>? RoleName { get; set; }
+ 
     }
 }
