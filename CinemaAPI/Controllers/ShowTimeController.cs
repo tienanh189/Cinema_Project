@@ -135,7 +135,7 @@ namespace CinemaAPI.Controllers
                                 join s in shifts on st.ShiftId equals s.ShiftId
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
-                                where r.CinemaId == CinemaId
+                                where r.CinemaId == CinemaId && st.ShowDate >= DateTime.UtcNow.Date
                                 select new ShowTimeDto
                                 {
                                     ShowTimeId = st.ShowTimeId,

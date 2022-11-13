@@ -151,7 +151,7 @@ namespace CinemaAPI.Controllers
                 }
             }
             
-            return seatList;
+            return seatList.OrderBy(x => x.SeatName).ToList();
         }
         #endregion
     }

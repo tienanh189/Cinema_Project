@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Models
 {
-    public class CinemaDbContext : DbContext
+    public class CinemaDbContext : IdentityDbContext<ApplicationUser>
     {
         public CinemaDbContext(DbContextOptions<CinemaDbContext> options) : base(options)
         {
@@ -15,14 +16,10 @@ namespace CinemaAPI.Models
         public DbSet<New> New { get; set; }
         public DbSet<Cinema> Cinema { get; set; }
         public DbSet<Movie> Movie { get; set; }
-        public DbSet<Permission> Permission { get; set; }
         public DbSet<Room> Room { get; set; }
         public DbSet<Seat> Seat { get; set; }
         public DbSet<ShowTime> ShowTime { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
-        public DbSet<User> User { get; set; }
-        public DbSet<UserGroup> UserGroup {get; set; }
-        public DbSet<UserGroup_Permission> UserGroup_Permission { get; set; }
         public DbSet<Shift> Shift { get; set; }
     }
 }

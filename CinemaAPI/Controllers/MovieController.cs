@@ -1,6 +1,8 @@
 ﻿using CinemaAPI.Helpers;
 using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
 namespace CinemaAPI.Controllers
@@ -91,6 +93,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost("Save")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> SaveMovie(CreateMovieDto dto)
         {
             try
@@ -123,6 +126,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
