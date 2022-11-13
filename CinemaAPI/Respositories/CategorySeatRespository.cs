@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,21 +12,25 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public CategorySeatRespository(CinemaDbContext db, IMapper mapper)
+        public CategorySeatRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<CategorySeatDto> Create(CategorySeatDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var categorySeat = _mapper.Map<CategorySeat>(dto);
             categorySeat.CategorySeatId = Guid.NewGuid();
             categorySeat.CreatedTime = DateTime.Now;
             categorySeat.ModifiedTime = null;
             categorySeat.DeletedTime = null;
-            categorySeat.CreatedByUser = null;
+            categorySeat.CreatedByUser = adminId;
             categorySeat.ModifiedByUser = null;
             categorySeat.IsDeleted = false;
             _db.CategorySeat.Add(categorySeat);
@@ -60,12 +65,15 @@ namespace CinemaAPI.Respositories
 
         public async Task<CategorySeatDto> Update(Guid id, CategorySeatDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var categorySeat = await _db.CategorySeat.FindAsync(id);
             if (categorySeat != null)
             {
                 categorySeat.CategorySeatName = dto.CategorySeatName;
                 categorySeat.Price= dto.Price;
                 categorySeat.ModifiedTime = DateTime.Now;
+                categorySeat.ModifiedByUser = adminId;
             }
             await _db.SaveChangesAsync();
             return _mapper.Map<CategorySeatDto>(categorySeat);

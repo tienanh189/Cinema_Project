@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,21 +12,25 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public CategoryMovieRespository(CinemaDbContext db, IMapper mapper)
+        public CategoryMovieRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<CategoryMovieDto> Create(CategoryMovieDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var categoryMovie = _mapper.Map<CategoryMovie>(dto);
             categoryMovie.CategoryMovieId = Guid.NewGuid();
             categoryMovie.CreatedTime = DateTime.Now;
             categoryMovie.ModifiedTime = null;
             categoryMovie.DeletedTime = null;
-            categoryMovie.CreatedByUser = null;
+            categoryMovie.CreatedByUser = adminId;
             categoryMovie.ModifiedByUser = null;
             categoryMovie.IsDeleted = false;
 
@@ -69,11 +74,14 @@ namespace CinemaAPI.Respositories
 
         public async Task<CategoryMovieDto> Update(Guid id, CategoryMovieDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var categoryMovie = await _db.CategoryMovie.FindAsync(id);
             if (categoryMovie != null)
             {
                 categoryMovie.CategoryMovieName = dto.CategoryMovieName;
                 categoryMovie.ModifiedTime = DateTime.Now;
+                categoryMovie.ModifiedByUser = adminId;
                 if(CheckIfCatMovieHasExist(categoryMovie))
                 {
                     categoryMovie.CategoryMovieId = Guid.Empty;
