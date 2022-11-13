@@ -79,6 +79,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Create(MovieDto dto)
         {
             try
@@ -108,6 +110,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPut("id")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Update(Guid id, [FromBody] MovieDto dto)
         {
             try

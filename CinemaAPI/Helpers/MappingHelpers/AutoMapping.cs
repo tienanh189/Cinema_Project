@@ -22,20 +22,14 @@ namespace CinemaAPI.Helpers
             CreateMap<RoomDto, Room>();
             CreateMap<Cinema, CinemaDto>();
             CreateMap<CinemaDto, Cinema>();
-            
-
             CreateMap<Movie, MovieDto>();
             CreateMap<MovieDto, Movie>();
-
             CreateMap<ShowTime, ShowTimeDto>();
             CreateMap<ShowTimeDto, ShowTime>();
-
             CreateMap<Ticket, TicketDto>();
             CreateMap<TicketDto, Ticket>();
-
             CreateMap<Shift, ShiftDto>();
             CreateMap<ShiftDto, Shift>();
-
             CreateMap<New, NewDto>();
             CreateMap<NewDto, New>();
         }

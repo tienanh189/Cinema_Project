@@ -1,6 +1,8 @@
 ﻿using CinemaAPI.Helpers;
 using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
 
@@ -71,6 +73,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Create(SeatDto dto)
         {
             try
@@ -85,6 +89,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPut("id")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Update(Guid id, [FromBody] SeatDto dto)
         {
             try
@@ -103,6 +109,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Delete(Guid id)
         {
             try

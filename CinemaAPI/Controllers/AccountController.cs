@@ -14,28 +14,34 @@ namespace CinemaAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountRespository _repo;
-        private readonly IHttpContextAccessor _contextAccessor;
 
-        public AccountController(IAccountRespository repo, IHttpContextAccessor contextAccessor)
+        public AccountController(IAccountRespository repo)
         {
             _repo = repo;
-            _contextAccessor = contextAccessor;
+
         }
 
         [HttpGet("getUserInfo")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUserInfo()
         {
-            var result = new ApplicationUser();
-            if (_contextAccessor.HttpContext != null)
-            {
-                result.FullNamme = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-                result.Email = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-                result.Id = _contextAccessor.HttpContext.User.FindFirstValue("UserId");
-            }
+            var result = _repo.GetUser();
             return Ok(result);
         }
 
+        [HttpGet("getAllUser")]
+        public IActionResult GetAllAccount()
+        {
+            try
+            {
+                var user = _repo.GetAll();
+                return Ok(user.ToList());
+            }
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
+        }
 
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(SignUpDto dto)

@@ -8,7 +8,8 @@ namespace CinemaAPI.Respositories.Interface
     {
         public Task<IdentityResult> SignUpAsync (SignUpDto dto);
         public Task<string> SignInAsync(SignInDto dto);
-        public Task<List<ApplicationUser>> GetAll();
+        public IEnumerable<ApplicationUser> GetAll();
+        public ApplicationUser GetUser();
 
     }
 }

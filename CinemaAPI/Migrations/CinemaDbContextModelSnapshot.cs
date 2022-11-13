@@ -44,6 +44,9 @@ namespace CinemaAPI.Migrations
                     b.Property<string>("FullNamme")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
