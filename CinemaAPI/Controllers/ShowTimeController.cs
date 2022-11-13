@@ -1,6 +1,8 @@
 ﻿using CinemaAPI.Helpers;
 using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
 
@@ -66,9 +68,6 @@ namespace CinemaAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -77,12 +76,22 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create(ShowTimeDto dto)
         {
+            
             try
             {
                 var showTime = await _repo.Create(dto);
-                return Ok(showTime);
+                if (showTime.ShowTimeId == Guid.Empty)
+                {
+                    return BadRequest(showTime);
+                }
+                else
+                {
+                    return Ok(showTime);
+                }
+               
             }
             catch (Exception e)
             {
@@ -91,6 +100,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpPut("id")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Update(Guid id, [FromBody] ShowTimeDto dto)
         {
             try
@@ -100,7 +111,15 @@ namespace CinemaAPI.Controllers
                     return BadRequest();
                 }
                 var showTime = await _repo.Update(id, dto);
-                return Ok(showTime);
+                if (showTime.ShowTimeId == Guid.Empty)
+                {
+                    return BadRequest(showTime);
+                }
+                else
+                {
+                    return Ok(showTime);
+                }
+               
             }
             catch (Exception e)
             {
@@ -109,6 +128,8 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> Delete(Guid id)
         {
             try
