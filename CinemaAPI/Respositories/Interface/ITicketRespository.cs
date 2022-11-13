@@ -11,5 +11,7 @@ namespace CinemaAPI.Respositories.Interface
         public Task<TicketDto> Create(TicketDto dto);
         public Task<TicketDto> Update(Guid id, TicketDto dto);
         public Task<bool> Delete(Guid id);
+
+        public Task<IQueryable<TicketDto>> GetMyTicket(Guid id);
     }
 }

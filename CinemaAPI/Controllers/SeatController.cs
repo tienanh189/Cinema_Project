@@ -49,6 +49,20 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("GetAllSeatInRoom")]
+        public async Task<IActionResult> GetAllSeatInRoom(Guid id)
+        {
+            try
+            {
+                var seat = await _repoSeat.GetAllSeatInRoom(id);
+                return Ok(seat.ToList());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {

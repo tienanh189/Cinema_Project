@@ -4,6 +4,9 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CinemaAPI.Controllers
 {
@@ -16,14 +19,16 @@ namespace CinemaAPI.Controllers
         private readonly ICategorySeatRespository _repoCategorySeat;
         private readonly ISeatRespository _repoSeat;
         private readonly ICinemaRespository _repoCinema;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat, ISeatRespository repoSeat, ICinemaRespository repoCinema)
+        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat, ISeatRespository repoSeat, ICinemaRespository repoCinema, IHttpContextAccessor contextAccessor)
         {
             _repo = repo;
             _repoBill = repoBill;
             _repoCategorySeat = repoCategorySeat;
             _repoSeat = repoSeat;
             _repoCinema = repoCinema;
+            _contextAccessor = contextAccessor;
         }
 
         [HttpGet]
@@ -33,6 +38,27 @@ namespace CinemaAPI.Controllers
             {
                 var tickets = await _repo.GetAll();
                 return Ok(await GetPaginatedResponse(tickets, pagination));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("GetMyTicket")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetMyTicket()
+        {
+            try
+            {
+                if (_contextAccessor.HttpContext != null)
+                {
+                    Guid result;
+                    var success = Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"),out result);
+                    var tickets = await _repo.GetMyTicket(result);
+                    return Ok(tickets.ToList());
+                }
+                return Ok("Create Failed");
             }
             catch (Exception e)
             {

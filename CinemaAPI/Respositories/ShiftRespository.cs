@@ -79,7 +79,12 @@ namespace CinemaAPI.Respositories
                 shift.StartTime = dto.StartTime;
                 shift.EndTime = dto.EndTime;
                 shift.ModifiedTime = DateTime.Now;
-                if(ReturnTime(shift.StartTime) < ReturnTime(shift.EndTime))
+                if (CheckIfTimeHasExist(shift))
+                {
+                    shift.ShiftId = Guid.Empty;
+                    return _mapper.Map<ShiftDto>(shift);
+                }
+                if (ReturnTime(shift.StartTime) < ReturnTime(shift.EndTime))
                 {
                     await _db.SaveChangesAsync();
                 }
