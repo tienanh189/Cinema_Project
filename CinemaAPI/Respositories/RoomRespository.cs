@@ -58,6 +58,12 @@ namespace CinemaAPI.Respositories
             return _mapper.Map<RoomDto>(room.FirstOrDefault());
         }
 
+        public async Task<IQueryable<RoomDto>> GetAllRoomInCinema(Guid id)
+        {
+            var rooms = _db.Room.Where(x => x.IsDeleted == false && x.CinemaId == id).AsEnumerable();
+            return _mapper.Map<List<RoomDto>>(rooms).AsQueryable();
+        }
+
         public async Task<RoomDto> Update(Guid id, RoomDto dto)
         {
             var room = await _db.Room.FindAsync(id);

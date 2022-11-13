@@ -11,5 +11,7 @@ namespace CinemaAPI.Respositories.Interface
         public Task<RoomDto> Create(RoomDto dto);
         public Task<RoomDto> Update(Guid id, RoomDto dto);
         public Task<bool> Delete(Guid id);
+
+        public Task<IQueryable<RoomDto>> GetAllRoomInCinema(Guid id);
     }
 }

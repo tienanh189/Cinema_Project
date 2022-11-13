@@ -11,5 +11,7 @@ namespace CinemaAPI.Respositories.Interface
         public Task<SeatDto> Create(SeatDto dto);
         public Task<SeatDto> Update(Guid id, SeatDto dto);
         public Task<bool> Delete(Guid id);
+
+        public Task<IQueryable<SeatDto>> GetAllSeatInRoom(Guid id);
     }
 }

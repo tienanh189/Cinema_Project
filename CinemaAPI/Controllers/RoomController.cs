@@ -33,6 +33,20 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("GetAllRoomInCinema")]
+        public async Task<IActionResult> GetAllRoomInCinema(Guid id)
+        {
+            try
+            {
+                var rooms = await _repo.GetAllRoomInCinema(id);
+                return Ok(rooms.ToList());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {

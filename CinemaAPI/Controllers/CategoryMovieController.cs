@@ -56,6 +56,10 @@ namespace CinemaAPI.Controllers
             try
             {
                 var categoryMovie = await _repo.Create(dto);
+                if (categoryMovie.CategoryMovieId == Guid.Empty)
+                {
+                    return Ok("Create Failed");
+                }
                 return Ok(categoryMovie);
             }
             catch (Exception e)
@@ -76,6 +80,10 @@ namespace CinemaAPI.Controllers
                     return BadRequest();
                 }
                 var categoryMovie = await _repo.Update(id,dto);
+                if (categoryMovie.CategoryMovieId == Guid.Empty)
+                {
+                    return Ok("Update Failed");
+                }
                 return Ok(categoryMovie);
             }
             catch (Exception e)

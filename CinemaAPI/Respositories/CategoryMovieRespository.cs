@@ -28,8 +28,17 @@ namespace CinemaAPI.Respositories
             categoryMovie.CreatedByUser = null;
             categoryMovie.ModifiedByUser = null;
             categoryMovie.IsDeleted = false;
-            _db.CategoryMovie.Add(categoryMovie);
-            await _db.SaveChangesAsync();
+
+            if(CheckIfCatMovieHasExist(categoryMovie))
+            {
+                categoryMovie.CategoryMovieId = Guid.Empty;
+                return _mapper.Map<CategoryMovieDto>(categoryMovie);
+            }
+            else
+            {
+                _db.CategoryMovie.Add(categoryMovie);
+                await _db.SaveChangesAsync();
+            }
             return _mapper.Map<CategoryMovieDto>(categoryMovie);
         }
 
@@ -65,11 +74,29 @@ namespace CinemaAPI.Respositories
             {
                 categoryMovie.CategoryMovieName = dto.CategoryMovieName;
                 categoryMovie.ModifiedTime = DateTime.Now;
-            }
-            _db.CategoryMovie.Update(categoryMovie);
-            await _db.SaveChangesAsync();
+                if(CheckIfCatMovieHasExist(categoryMovie))
+                {
+                    categoryMovie.CategoryMovieId = Guid.Empty;
+                    return _mapper.Map<CategoryMovieDto>(categoryMovie);
+                }
+                else
+                {
+                    _db.CategoryMovie.Update(categoryMovie);
+                    await _db.SaveChangesAsync();
+                }
+            }  
             return _mapper.Map<CategoryMovieDto>(categoryMovie);
-        }  
-        
+        }
+
+
+        bool CheckIfCatMovieHasExist(CategoryMovie categoryMovie)
+        {
+            var name = _db.CategoryMovie.Where(x => x.CategoryMovieName == categoryMovie.CategoryMovieName).AsEnumerable();
+            if (name != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
