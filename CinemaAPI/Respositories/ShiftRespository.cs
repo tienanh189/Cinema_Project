@@ -18,14 +18,14 @@ namespace CinemaAPI.Respositories
             _mapper = mapper;
         }
 
-        public async Task<ShiftDto> Create(ShiftDto dto)
+        public async Task<ShiftDto> Create(ShiftDto dto, Guid id)
         {
             var shift = _mapper.Map<Shift>(dto);
             shift.ShiftId = Guid.NewGuid();
             shift.CreatedTime = DateTime.Now;
             shift.ModifiedTime = null;
             shift.DeletedTime = null;
-            shift.CreatedByUser = null;
+            shift.CreatedByUser = id;
             shift.ModifiedByUser = null;
             shift.IsDeleted = false;
 
@@ -71,7 +71,7 @@ namespace CinemaAPI.Respositories
             return _mapper.Map<ShiftDto>(shift.FirstOrDefault());
         }
 
-        public async Task<ShiftDto> Update(Guid id, ShiftDto dto)
+        public async Task<ShiftDto> Update(Guid id, ShiftDto dto, Guid adminId)
         {
             var shift = await _db.Shift.FindAsync(id);
             if (shift != null)
@@ -79,6 +79,7 @@ namespace CinemaAPI.Respositories
                 shift.StartTime = dto.StartTime;
                 shift.EndTime = dto.EndTime;
                 shift.ModifiedTime = DateTime.Now;
+                shift.ModifiedByUser = adminId;
                 if (CheckIfTimeHasExist(shift))
                 {
                     shift.ShiftId = Guid.Empty;

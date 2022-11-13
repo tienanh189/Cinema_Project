@@ -125,7 +125,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("BillId");
 
-                    b.ToTable("Bill", (string)null);
+                    b.ToTable("Bill");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.CategoryMovie", b =>
@@ -157,7 +157,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("CategoryMovieId");
 
-                    b.ToTable("CategoryMovie", (string)null);
+                    b.ToTable("CategoryMovie");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.CategoryMovie_Movie", b =>
@@ -196,7 +196,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("CategoryMovie_Movie", (string)null);
+                    b.ToTable("CategoryMovie_Movie");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.CategorySeat", b =>
@@ -231,7 +231,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("CategorySeatId");
 
-                    b.ToTable("CategorySeat", (string)null);
+                    b.ToTable("CategorySeat");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Cinema", b =>
@@ -263,7 +263,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("CinemaId");
 
-                    b.ToTable("Cinema", (string)null);
+                    b.ToTable("Cinema");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Movie", b =>
@@ -316,7 +316,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("MovieId");
 
-                    b.ToTable("Movie", (string)null);
+                    b.ToTable("Movie");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.New", b =>
@@ -355,7 +355,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("NewId");
 
-                    b.ToTable("New", (string)null);
+                    b.ToTable("New");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Room", b =>
@@ -395,7 +395,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("CinemaId");
 
-                    b.ToTable("Room", (string)null);
+                    b.ToTable("Room");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Seat", b =>
@@ -440,7 +440,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Seat", (string)null);
+                    b.ToTable("Seat");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Shift", b =>
@@ -477,7 +477,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasKey("ShiftId");
 
-                    b.ToTable("Shift", (string)null);
+                    b.ToTable("Shift");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.ShowTime", b =>
@@ -524,7 +524,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("ShiftId");
 
-                    b.ToTable("ShowTime", (string)null);
+                    b.ToTable("ShowTime");
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Ticket", b =>
@@ -571,7 +571,7 @@ namespace CinemaAPI.Migrations
 
                     b.HasIndex("ShowTimeId");
 
-                    b.ToTable("Ticket", (string)null);
+                    b.ToTable("Ticket");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

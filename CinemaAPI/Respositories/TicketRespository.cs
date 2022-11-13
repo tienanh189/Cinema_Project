@@ -17,14 +17,14 @@ namespace CinemaAPI.Respositories
             _db = db;
             _mapper = mapper;
         }
-        public async Task<TicketDto> Create(TicketDto dto)
+        public async Task<TicketDto> Create(TicketDto dto, Guid userID)
         {
             var ticket = _mapper.Map<Ticket>(dto);
             ticket.TicketId = Guid.NewGuid();
             ticket.CreatedTime = DateTime.Now;
             ticket.ModifiedTime = null;
             ticket.DeletedTime = null;
-            ticket.CreatedByUser = null;
+            ticket.CreatedByUser = userID;
             ticket.ModifiedByUser = null;
             ticket.IsDeleted = false;
             _db.Ticket.Add(ticket);
@@ -57,7 +57,7 @@ namespace CinemaAPI.Respositories
             return _mapper.Map<TicketDto>(ticket.FirstOrDefault());
         }
 
-        public async Task<TicketDto> Update(Guid id, TicketDto dto)
+        public async Task<TicketDto> Update(Guid id, TicketDto dto, Guid adminId)
         {
             var ticket = await _db.Ticket.FindAsync(id);
             if (ticket != null)
@@ -66,6 +66,7 @@ namespace CinemaAPI.Respositories
                 ticket.BillId = dto.BillId;
                 ticket.SeatId = dto.SeatId;
                 ticket.Price = dto.Price;
+                ticket.ModifiedByUser = adminId;
                 ticket.ModifiedTime = DateTime.Now;
             }
             await _db.SaveChangesAsync();

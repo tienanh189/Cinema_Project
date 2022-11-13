@@ -100,8 +100,14 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var ticket = await _repo.Update(id, dto);
-                return Ok(ticket);
+                if (_contextAccessor.HttpContext != null)
+                {
+                    Guid adminID;
+                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
+                    var ticket = await _repo.Update(id, dto, adminID);
+                    return Ok(ticket);
+                }
+                return Ok("Update Failed");
             }
             catch (Exception e)
             {
@@ -131,12 +137,17 @@ namespace CinemaAPI.Controllers
             var categorySeat = await _repoCategorySeat.GetAll();
             foreach (var seatDetail in input.ListSeat)
             {
-                var ticket = new TicketDto();
-                ticket.BillId = input.BillId;
-                ticket.ShowTimeId = input.ShowTimeId;
-                ticket.Price = seatDetail.Price;
-                ticket.SeatId = seatDetail.SeatId;
-                await _repo.Create(ticket);
+                if (_contextAccessor.HttpContext != null)
+                {
+                    Guid adminID;
+                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
+                    var ticket = new TicketDto();
+                    ticket.BillId = input.BillId;
+                    ticket.ShowTimeId = input.ShowTimeId;
+                    ticket.Price = seatDetail.Price;
+                    ticket.SeatId = seatDetail.SeatId;
+                    await _repo.Create(ticket, adminID);
+                }
             }     
             return input;
         }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
-
+using System.Security.Claims;
 
 namespace CinemaAPI.Controllers
 {
@@ -14,10 +14,12 @@ namespace CinemaAPI.Controllers
     public class ShiftController : _ControllerBase
     {
         private readonly IShiftRespository _repo;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public ShiftController(IShiftRespository repo)
+        public ShiftController(IShiftRespository repo, IHttpContextAccessor contextAccessor)
         {
             _repo = repo;
+            _contextAccessor = contextAccessor;
         }
 
         [HttpGet]
@@ -48,12 +50,18 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var shift = await _repo.Create(dto);
-                if(shift.ShiftId == Guid.Empty)
+                if (_contextAccessor.HttpContext != null)
                 {
-                    return Ok("Create Failed");
+                    Guid adminID;
+                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
+                    var shift = await _repo.Create(dto, adminID);
+                    if (shift.ShiftId == Guid.Empty)
+                    {
+                        return Ok("Create Failed");
+                    }
+                    return Ok(shift);
                 }
-                return Ok(shift);
+                return Ok("Create Failed");
             }
             catch (Exception e)
             {
@@ -72,12 +80,18 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var shift = await _repo.Update(id, dto);
-                if (shift.ShiftId == Guid.Empty)
+                if (_contextAccessor.HttpContext != null)
                 {
-                    return Ok("Update Failed");
+                    Guid adminID;
+                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
+                    var shift = await _repo.Update(id, dto, adminID);
+                    if (shift.ShiftId == Guid.Empty)
+                    {
+                        return Ok("Update Failed");
+                    }
+                    return Ok(shift);
                 }
-                return Ok(shift);
+                return Ok("Update Failed");
             }
             catch (Exception e)
             {

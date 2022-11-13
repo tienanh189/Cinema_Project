@@ -8,8 +8,8 @@ namespace CinemaAPI.Respositories.Interface
     {
         public Task<IQueryable<ShiftDto>> GetAll();
         public Task<ShiftDto> GetById(Guid id);
-        public Task<ShiftDto> Create(ShiftDto dto);
-        public Task<ShiftDto> Update(Guid id, ShiftDto dto);
+        public Task<ShiftDto> Create(ShiftDto dto, Guid adminId);
+        public Task<ShiftDto> Update(Guid id, ShiftDto dto, Guid adminId);
         public Task<bool> Delete(Guid id);
     }
 }

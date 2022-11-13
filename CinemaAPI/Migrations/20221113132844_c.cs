@@ -4,7 +4,7 @@
 
 namespace CinemaAPI.Migrations
 {
-    public partial class updateUserIsDeleted : Migration
+    public partial class c : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
