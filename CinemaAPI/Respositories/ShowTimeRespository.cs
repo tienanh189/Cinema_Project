@@ -27,9 +27,21 @@ namespace CinemaAPI.Respositories
             showTime.CreatedByUser = null;
             showTime.ModifiedByUser = null;
             showTime.IsDeleted = false;
-            _db.ShowTime.Add(showTime);
-            await _db.SaveChangesAsync();
+            if (CheckShowTimeHasExist(showTime))
+            {
+                showTime.ShowTimeId = Guid.Empty;
+            }
+            else
+            {
+                _db.ShowTime.Add(showTime);
+                await _db.SaveChangesAsync();                
+            }
             return _mapper.Map<ShowTimeDto>(showTime);
+        }
+
+        public Task<ShowTimeDto> CreateAndCheck(ShowTimeDto dto)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> Delete(Guid id)
@@ -66,33 +78,29 @@ namespace CinemaAPI.Respositories
                 showTime.MovieId = dto.MovieId;
                 showTime.RoomId = dto.RoomId;
                 showTime.ModifiedTime = DateTime.Now;
-            }
-            await _db.SaveChangesAsync();
+                if (CheckShowTimeHasExist(showTime))
+                {
+                    showTime.ShowTimeId = Guid.Empty;
+                }
+                else
+                {
+                    await _db.SaveChangesAsync();
+                }                
+            }        
             return _mapper.Map<ShowTimeDto>(showTime);
         }
 
-        public async Task<ShowTimeDto> CreateAndCheck(ShowTimeDto dto)
+        
+        bool CheckShowTimeHasExist(ShowTime showTime)
         {
-            var showTime = _mapper.Map<ShowTime>(dto);
-            showTime.ShowTimeId = Guid.NewGuid();
-            showTime.CreatedTime = DateTime.Now;
-            showTime.ModifiedTime = null;
-            showTime.DeletedTime = null;
-            showTime.CreatedByUser = null;
-            showTime.ModifiedByUser = null;
-            showTime.IsDeleted = false;
-
-            var check = _db.ShowTime.Where(x => x.MovieId == showTime.MovieId && x.RoomId == showTime.RoomId).ToList();
-            if(check != null)
-            {
-                _db.ShowTime.Add(showTime);
-                await _db.SaveChangesAsync();
+            var result=_db.ShowTime.Where(x=>x.ShowDate==showTime.ShowDate && 
+            x.ShiftId==showTime.ShiftId && x.RoomId==showTime.RoomId).FirstOrDefault();
+            if (result != null)
+            {                
+                return true;
             }
-            else
-            {
-
-            }
-            return _mapper.Map<ShowTimeDto>(showTime);
+            return false;
+            
         }
     }
 }
