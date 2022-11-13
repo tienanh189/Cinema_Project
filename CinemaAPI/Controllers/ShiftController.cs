@@ -50,18 +50,12 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                if (_contextAccessor.HttpContext != null)
+                var shift = await _repo.Create(dto);
+                if (shift.ShiftId == Guid.Empty)
                 {
-                    Guid adminID;
-                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
-                    var shift = await _repo.Create(dto, adminID);
-                    if (shift.ShiftId == Guid.Empty)
-                    {
-                        return Ok("Create Failed");
-                    }
-                    return Ok(shift);
+                    return Ok("Create Failed");
                 }
-                return Ok("Create Failed");
+                return Ok(shift);
             }
             catch (Exception e)
             {
@@ -80,18 +74,12 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                if (_contextAccessor.HttpContext != null)
+                var shift = await _repo.Update(id, dto);
+                if (shift.ShiftId == Guid.Empty)
                 {
-                    Guid adminID;
-                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
-                    var shift = await _repo.Update(id, dto, adminID);
-                    if (shift.ShiftId == Guid.Empty)
-                    {
-                        return Ok("Update Failed");
-                    }
-                    return Ok(shift);
+                    return Ok("Update Failed");
                 }
-                return Ok("Update Failed");
+                return Ok(shift);
             }
             catch (Exception e)
             {

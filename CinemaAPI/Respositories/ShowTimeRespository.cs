@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,20 +12,24 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public ShowTimeRespository(CinemaDbContext db, IMapper mapper)
+        public ShowTimeRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
         public async Task<ShowTimeDto> Create(ShowTimeDto dto)
         {
+            Guid adminID;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
             var showTime = _mapper.Map<ShowTime>(dto);
             showTime.ShowTimeId = Guid.NewGuid();
             showTime.CreatedTime = DateTime.Now;
             showTime.ModifiedTime = null;
             showTime.DeletedTime = null;
-            showTime.CreatedByUser = null;
+            showTime.CreatedByUser = adminID;
             showTime.ModifiedByUser = null;
             showTime.IsDeleted = false;
             if (CheckShowTimeHasExist(showTime))
@@ -74,10 +79,13 @@ namespace CinemaAPI.Respositories
             var showTime = await _db.ShowTime.FindAsync(id);
             if (showTime != null)
             {
+                Guid adminID;
+                Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
                 showTime.ShowDate = dto.ShowDate;
                 showTime.MovieId = dto.MovieId;
                 showTime.RoomId = dto.RoomId;
                 showTime.ModifiedTime = DateTime.Now;
+                showTime.ModifiedByUser = adminID;
                 if (CheckShowTimeHasExist(showTime))
                 {
                     showTime.ShowTimeId = Guid.Empty;

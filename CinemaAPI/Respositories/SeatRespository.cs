@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,23 +12,31 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
-
-        public SeatRespository(CinemaDbContext db, IMapper mapper)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public SeatRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<SeatDto> Create(SeatDto dto)
         {
+            Guid adminID;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
             var seat = _mapper.Map<Seat>(dto);
             seat.SeatId = Guid.NewGuid();
             seat.CreatedTime = DateTime.Now;
             seat.ModifiedTime = null;
             seat.DeletedTime = null;
-            seat.CreatedByUser = null;
+            seat.CreatedByUser = adminID;
             seat.ModifiedByUser = null;
             seat.IsDeleted = false;
+            if (CheckIfSeatHasExist(seat))
+            {
+                seat.SeatId = Guid.Empty;
+                return _mapper.Map<SeatDto>(seat);
+            }
             _db.Seat.Add(seat);
             await _db.SaveChangesAsync();
             return _mapper.Map<SeatDto>(seat);
@@ -69,11 +78,33 @@ namespace CinemaAPI.Respositories
             var seat = await _db.Seat.FindAsync(id);
             if (seat != null)
             {
+                Guid adminID;
+                Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
                 seat.SeatName = dto.SeatName;
                 seat.ModifiedTime = DateTime.Now;
+                seat.ModifiedByUser = adminID;
+                if (CheckIfSeatHasExist(seat))
+                {
+                    seat.SeatId = Guid.Empty;
+                    return _mapper.Map<SeatDto>(seat);
+                }
+                else
+                {
+                    await _db.SaveChangesAsync();
+                }
             }
             await _db.SaveChangesAsync();
             return _mapper.Map<SeatDto>(seat);
+        }
+
+        bool CheckIfSeatHasExist(Seat seat)
+        {
+            var _seat = _db.Seat.Where(x => x.SeatName == seat.SeatName && x.RoomId == seat.RoomId).AsEnumerable();
+            if (_seat != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -21,16 +21,14 @@ namespace CinemaAPI.Controllers
         private readonly ICategorySeatRespository _repoCategorySeat;
         private readonly ISeatRespository _repoSeat;
         private readonly ICinemaRespository _repoCinema;
-        private readonly IHttpContextAccessor _contextAccessor;
 
-        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat, ISeatRespository repoSeat, ICinemaRespository repoCinema, IHttpContextAccessor contextAccessor)
+        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat, ISeatRespository repoSeat, ICinemaRespository repoCinema)
         {
             _repo = repo;
             _repoBill = repoBill;
             _repoCategorySeat = repoCategorySeat;
             _repoSeat = repoSeat;
             _repoCinema = repoCinema;
-            _contextAccessor = contextAccessor;
         }
 
         [HttpGet]
@@ -53,14 +51,8 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                if (_contextAccessor.HttpContext != null)
-                {
-                    Guid result;
-                    var success = Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"),out result);
-                    var tickets = await _repo.GetMyTicket(result);
-                    return Ok(tickets.ToList());
-                }
-                return Ok("Create Failed");
+                var tickets = await _repo.GetMyTicket();
+                return Ok(tickets.ToList());
             }
             catch (Exception e)
             {
@@ -100,14 +92,8 @@ namespace CinemaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                if (_contextAccessor.HttpContext != null)
-                {
-                    Guid adminID;
-                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
-                    var ticket = await _repo.Update(id, dto, adminID);
-                    return Ok(ticket);
-                }
-                return Ok("Update Failed");
+                var ticket = await _repo.Update(id, dto);
+                return Ok(ticket);
             }
             catch (Exception e)
             {
@@ -137,17 +123,12 @@ namespace CinemaAPI.Controllers
             var categorySeat = await _repoCategorySeat.GetAll();
             foreach (var seatDetail in input.ListSeat)
             {
-                if (_contextAccessor.HttpContext != null)
-                {
-                    Guid adminID;
-                    Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
-                    var ticket = new TicketDto();
-                    ticket.BillId = input.BillId;
-                    ticket.ShowTimeId = input.ShowTimeId;
-                    ticket.Price = seatDetail.Price;
-                    ticket.SeatId = seatDetail.SeatId;
-                    await _repo.Create(ticket, adminID);
-                }
+                var ticket = new TicketDto();
+                ticket.BillId = input.BillId;
+                ticket.ShowTimeId = input.ShowTimeId;
+                ticket.Price = seatDetail.Price;
+                ticket.SeatId = seatDetail.SeatId;
+                await _repo.Create(ticket);
             }     
             return input;
         }
