@@ -1,4 +1,6 @@
-﻿namespace CinemaAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CinemaAPI.Models
 {
     public class BaseModel
     {
