@@ -31,6 +31,7 @@ namespace CinemaAPI.Controllers
             {
                 result.FullNamme = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 result.Email = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                result.Id = _contextAccessor.HttpContext.User.FindFirstValue("UserId");
             }
             return Ok(result);
         }

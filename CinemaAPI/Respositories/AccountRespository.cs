@@ -38,6 +38,7 @@ namespace CinemaAPI.Respositories
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, dto.Email),
+                new Claim("UserId", user.Id),
                 new Claim(ClaimTypes.Name, user.FullNamme),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
