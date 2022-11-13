@@ -59,7 +59,6 @@ namespace CinemaAPI.Controllers
 
         [HttpPut("id")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
         public async Task<IActionResult> Update(Guid id, [FromBody] CategoryMovie_MovieDto dto)
         {
             try
