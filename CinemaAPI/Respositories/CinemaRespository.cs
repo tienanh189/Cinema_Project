@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,21 +12,25 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public CinemaRespository(CinemaDbContext db, IMapper mapper)
+        public CinemaRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<CinemaDto> Create(CinemaDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var cinema = _mapper.Map<Cinema>(dto);
             cinema.CinemaId = Guid.NewGuid();
             cinema.CreatedTime = DateTime.Now;
             cinema.ModifiedTime = null;
             cinema.DeletedTime = null;
-            cinema.CreatedByUser = null;
+            cinema.CreatedByUser = adminId;
             cinema.ModifiedByUser = null;
             cinema.IsDeleted = false;
             _db.Cinema.Add(cinema);
@@ -60,11 +65,14 @@ namespace CinemaAPI.Respositories
 
         public async Task<CinemaDto> Update(Guid id, CinemaDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var cinema = await _db.Cinema.FindAsync(id);
             if (cinema != null)
             {
                 cinema.CinemaName = dto.CinemaName;
                 cinema.ModifiedTime = DateTime.Now;
+                cinema.ModifiedByUser = adminId;
             }
             await _db.SaveChangesAsync();
             return _mapper.Map<CinemaDto>(cinema);

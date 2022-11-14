@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,19 +12,25 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
-        public MovieRespository(CinemaDbContext db, IMapper mapper)
+        private readonly IHttpContextAccessor _contextAccessor;
+
+        public MovieRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
+
         public async Task<MovieDto> Create(MovieDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var movie = _mapper.Map<Movie>(dto);
             movie.MovieId = Guid.NewGuid();
             movie.CreatedTime = DateTime.Now;
             movie.ModifiedTime = null;
             movie.DeletedTime = null;
-            movie.CreatedByUser = null;
+            movie.CreatedByUser = adminId;
             movie.ModifiedByUser = null;
             movie.IsDeleted = false;
             _db.Movie.Add(movie);
@@ -33,12 +40,14 @@ namespace CinemaAPI.Respositories
 
         public async Task<Guid> CreateAndReturnId(MovieDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var movie = _mapper.Map<Movie>(dto);
             movie.MovieId = Guid.NewGuid();
             movie.CreatedTime = DateTime.Now;
             movie.ModifiedTime = null;
             movie.DeletedTime = null;
-            movie.CreatedByUser = null;
+            movie.CreatedByUser = adminId;
             movie.ModifiedByUser = null;
             movie.IsDeleted = false;
             _db.Movie.Add(movie);
@@ -73,6 +82,8 @@ namespace CinemaAPI.Respositories
 
         public async Task<MovieDto> Update(Guid id, MovieDto dto)
         {
+            Guid adminId;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminId);
             var movie = await _db.Movie.FindAsync(id);
             if (movie != null)
             {
@@ -85,6 +96,7 @@ namespace CinemaAPI.Respositories
                 movie.EndShowDate = dto.EndShowDate;
                 movie.Image = dto.Image;
                 movie.ModifiedTime = DateTime.Now;
+                movie.ModifiedByUser = adminId;
             }
             await _db.SaveChangesAsync();
             return _mapper.Map<MovieDto>(movie);
