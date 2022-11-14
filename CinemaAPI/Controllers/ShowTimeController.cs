@@ -193,12 +193,14 @@ namespace CinemaAPI.Controllers
             var movies = await _repoMovie.GetAll();
             var rooms = await _repoRoom.GetAll();
             var shifts = await _repoShift.GetAll();
+            var cinemas = await _repoCinema.GetAll();
             foreach (var showtime in showTimes)
             {
                 var result = from st in showTimes
                              join m in movies on st.MovieId equals m.MovieId
                              join s in shifts on st.ShiftId equals s.ShiftId
                              join r in rooms on st.RoomId equals r.RoomId
+                             join c in cinemas on r.CinemaId equals c.CinemaId
                              where st.ShowTimeId == showtime.ShowTimeId
                              select new ShowTimeDto
                              {
@@ -210,6 +212,7 @@ namespace CinemaAPI.Controllers
                                  ShiftId = st.ShiftId,
                                  ShowDate = st.ShowDate,
                                  StartTime = s.StartTime,
+                                 CinemaName = c.CinemaName
                              };
                 showTimeList.Add(result.FirstOrDefault());
             }
@@ -229,6 +232,7 @@ namespace CinemaAPI.Controllers
                                 join s in shifts on st.ShiftId equals s.ShiftId
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
+                                join c in cinemas on r.CinemaId equals c.CinemaId
                                 where r.CinemaId == CinemaId && st.ShowDate >= DateTime.UtcNow.Date
                                 select new ShowTimeDto
                                 {
@@ -241,7 +245,8 @@ namespace CinemaAPI.Controllers
                                     MovieName = m.MovieName,
                                     RoomId = r.RoomId,
                                     Duration = m.Duration,
-                                    RoomName = r.RoomName
+                                    RoomName = r.RoomName,
+                                    CinemaName = c.CinemaName
                                 };
 
             return showTimeQuery.ToList();
@@ -258,6 +263,7 @@ namespace CinemaAPI.Controllers
                                 join s in shifts on st.ShiftId equals s.ShiftId
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
+                                join c in cinemas on r.CinemaId equals c.CinemaId
                                 where m.MovieId == MovieId 
                                 select new ShowTimeDto
                                 {
@@ -270,7 +276,8 @@ namespace CinemaAPI.Controllers
                                     MovieName = m.MovieName,
                                     RoomId = r.RoomId,
                                     Duration = m.Duration,
-                                    RoomName = r.RoomName
+                                    RoomName = r.RoomName,
+                                    CinemaName = c.CinemaName
                                 };
 
             return showTimeQuery.ToList();
@@ -287,6 +294,7 @@ namespace CinemaAPI.Controllers
                                 join s in shifts on st.ShiftId equals s.ShiftId
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
+                                join c in cinemas on r.CinemaId equals c.CinemaId
                                 where r.RoomId == RoomId 
                                 select new ShowTimeDto
                                 {
@@ -299,7 +307,8 @@ namespace CinemaAPI.Controllers
                                     MovieName = m.MovieName,
                                     RoomId = r.RoomId,
                                     Duration = m.Duration,
-                                    RoomName = r.RoomName
+                                    RoomName = r.RoomName,
+                                    CinemaName = c.CinemaName
                                 };
 
             return showTimeQuery.ToList();
@@ -316,6 +325,7 @@ namespace CinemaAPI.Controllers
                                 join s in shifts on st.ShiftId equals s.ShiftId
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
+                                join c in cinemas on r.CinemaId equals c.CinemaId
                                 where st.ShowDate.Value.Date == date.Date
                                 select new ShowTimeDto
                                 {
@@ -328,7 +338,8 @@ namespace CinemaAPI.Controllers
                                     MovieName = m.MovieName,
                                     RoomId = r.RoomId,
                                     Duration = m.Duration,
-                                    RoomName = r.RoomName
+                                    RoomName = r.RoomName,
+                                    CinemaName = c.CinemaName
                                 };
 
             return showTimeQuery.ToList();

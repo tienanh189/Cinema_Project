@@ -15,6 +15,7 @@ namespace CinemaAPI.Models.Dto
         public Guid RoomId { get; set; }
         public int Duration { get; set; }
         public string? RoomName { get; set; }
+        public string? CinemaName { get; set; }
 
     }
 }
