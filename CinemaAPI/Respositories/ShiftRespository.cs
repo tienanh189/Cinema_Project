@@ -4,6 +4,7 @@ using CinemaAPI.Models.Dto;
 using CinemaAPI.Respositories.Interface;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CinemaAPI.Respositories
 {
@@ -11,21 +12,25 @@ namespace CinemaAPI.Respositories
     {
         private readonly CinemaDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public ShiftRespository(CinemaDbContext db, IMapper mapper)
+        public ShiftRespository(CinemaDbContext db, IMapper mapper, IHttpContextAccessor contextAccessor)
         {
             _db = db;
             _mapper = mapper;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<ShiftDto> Create(ShiftDto dto)
         {
+            Guid adminID;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
             var shift = _mapper.Map<Shift>(dto);
             shift.ShiftId = Guid.NewGuid();
             shift.CreatedTime = DateTime.Now;
             shift.ModifiedTime = null;
             shift.DeletedTime = null;
-            shift.CreatedByUser = null;
+            shift.CreatedByUser = adminID;
             shift.ModifiedByUser = null;
             shift.IsDeleted = false;
 
@@ -76,9 +81,12 @@ namespace CinemaAPI.Respositories
             var shift = await _db.Shift.FindAsync(id);
             if (shift != null)
             {
+                Guid adminID;
+                Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
                 shift.StartTime = dto.StartTime;
                 shift.EndTime = dto.EndTime;
                 shift.ModifiedTime = DateTime.Now;
+                shift.ModifiedByUser = adminID;
                 if (CheckIfTimeHasExist(shift))
                 {
                     shift.ShiftId = Guid.Empty;

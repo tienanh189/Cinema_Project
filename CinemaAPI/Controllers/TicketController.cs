@@ -22,10 +22,8 @@ namespace CinemaAPI.Controllers
         private readonly ISeatRespository _repoSeat;
         private readonly ICinemaRespository _repoCinema;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IMovieRespository _repoMovie;
 
-        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat,
-            ISeatRespository repoSeat, ICinemaRespository repoCinema, IHttpContextAccessor contextAccessor, IMovieRespository repoMovie)
+        public TicketController(ITicketRespository repo, IBillRespository repoBill, ICategorySeatRespository repoCategorySeat, ISeatRespository repoSeat, ICinemaRespository repoCinema, IHttpContextAccessor contextAccessor)
         {
             _repo = repo;
             _repoBill = repoBill;
@@ -33,7 +31,6 @@ namespace CinemaAPI.Controllers
             _repoSeat = repoSeat;
             _repoCinema = repoCinema;
             _contextAccessor = contextAccessor;
-            _repoMovie = repoMovie;
         }
 
         [HttpGet]
@@ -56,19 +53,8 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                if (_contextAccessor.HttpContext != null)
-                {
-                    Guid result;
-                    var success = Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"),out result);
-                    var tickets = await _repo.GetMyTicket(result);
-                    var seats = await _repoSeat.GetAll();
-                    var movies = await _repoMovie.GetAll();
-                    //var detailTicket = from t in tickets
-                    //                   join s in seats on t.SeatId equals s.SeatId
-                                      
-                    return Ok(tickets.ToList());
-                }
-                return Ok("Create Failed");
+                var tickets = await _repo.GetMyTicket();
+                return Ok(tickets.ToList());
             }
             catch (Exception e)
             {

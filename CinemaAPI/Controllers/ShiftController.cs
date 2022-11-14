@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
-
+using System.Security.Claims;
 
 namespace CinemaAPI.Controllers
 {
@@ -14,10 +14,12 @@ namespace CinemaAPI.Controllers
     public class ShiftController : _ControllerBase
     {
         private readonly IShiftRespository _repo;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public ShiftController(IShiftRespository repo)
+        public ShiftController(IShiftRespository repo, IHttpContextAccessor contextAccessor)
         {
             _repo = repo;
+            _contextAccessor = contextAccessor;
         }
 
         [HttpGet]
@@ -49,7 +51,7 @@ namespace CinemaAPI.Controllers
             try
             {
                 var shift = await _repo.Create(dto);
-                if(shift.ShiftId == Guid.Empty)
+                if (shift.ShiftId == Guid.Empty)
                 {
                     return Ok("Create Failed");
                 }
