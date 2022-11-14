@@ -49,6 +49,44 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("getMyBill")]
+        public async Task<IActionResult> GetMyBill()
+        {
+            try
+            {
+                var bills = await _repo.GetMyBill();
+                var showTimes = await _repoShowTime.GetAll();
+                var tickets = await _repoTicket.GetAll();
+                var movies = await _repoMovie.GetAll();
+                var shifts = await _repoShift.GetAll();
+                var rooms = await _repoRoom.GetAll();
+                var cinemas = await _repoCinema.GetAll();
+
+                var result = from t in tickets
+                             join b in bills on t.BillId equals b.BillId
+                             join st in showTimes on t.ShowTimeId equals st.ShowTimeId
+                             join m in movies on st.MovieId equals m.MovieId
+                             join s in shifts on st.ShiftId equals s.ShiftId
+                             join r in rooms on st.RoomId equals r.RoomId
+                             join c in cinemas on r.CinemaId equals c.CinemaId
+                             select new
+                             {
+                                 BillId = b.BillId,
+                                 MovieName = m.MovieName,
+                                 RoomName = r.RoomName,
+                                 CinemaName = c.CinemaName,
+                                 StartTime = s.StartTime,
+                                 ShowDate = st.ShowDate,
+                                 totalAmount = b.TotalAmount
+                             };
+                return Ok(result.Distinct());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         [HttpPost("getBill")]
 

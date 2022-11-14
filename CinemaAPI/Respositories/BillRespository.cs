@@ -93,6 +93,14 @@ namespace CinemaAPI.Respositories
             await _db.SaveChangesAsync();
             return _mapper.Map<BillDto>(bill);
         }
+
+        public async Task<IQueryable<BillDto>> GetMyBill()
+        {
+            Guid adminID;
+            Guid.TryParse(_contextAccessor.HttpContext.User.FindFirstValue("UserId"), out adminID);
+            var bills = _db.Bill.Where(x => x.IsDeleted == false && x.CreatedByUser == adminID && x.IsPayed == true).AsEnumerable();
+            return _mapper.Map<List<BillDto>>(bills).AsQueryable();
+        }
     }
 
 }

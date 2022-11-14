@@ -11,6 +11,7 @@ namespace CinemaAPI.Respositories.Interface
         public Task<BillDto> Create(BillDto dto);
         public Task<Guid> CreatAndReturnId(BillDto dto);
         public Task<BillDto> Update(Guid id, BillDto dto);
+        public Task<IQueryable<BillDto>> GetMyBill();
         public Task<bool> Delete(Guid id);
     }
 }
