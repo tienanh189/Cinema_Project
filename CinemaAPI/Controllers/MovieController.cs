@@ -64,6 +64,31 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("getmovieshowtime")]
+        public async Task<IActionResult> GetAllMoviesShowTime()
+        {
+            try
+            {
+                var listMovie = new List<MovieDto>();
+                var movies = await _repoMovie.GetAll();           
+                foreach (var movie in movies.ToList())
+                {
+                    DateTime today = DateTime.Now.Date;
+                    DateTime endDate = movie.EndShowDate.Date;
+                    int time = (int)(today - endDate).TotalDays;
+                    if (time <= 0)
+                    {
+                        listMovie.Add(movie);
+                    }
+                }
+                return Ok(listMovie);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {

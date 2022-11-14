@@ -43,12 +43,13 @@ namespace CinemaAPI.Respositories
             {
                 result.FullNamme = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 result.Email = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                result.PhoneNumber = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.MobilePhone);
                 result.Id = _contextAccessor.HttpContext.User.FindFirstValue("UserId");
             }
             return result;
         }
 
-            public async Task<string> SignInAsync(SignInDto dto)
+        public async Task<string> SignInAsync(SignInDto dto)
         {
             var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, false, false);
             if (!result.Succeeded)
@@ -61,6 +62,7 @@ namespace CinemaAPI.Respositories
                 new Claim(ClaimTypes.Email, dto.Email),
                 new Claim("UserId", user.Id),
                 new Claim(ClaimTypes.Name, user.FullNamme),
+                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

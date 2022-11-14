@@ -75,7 +75,6 @@ namespace CinemaAPI.Respositories
         public async Task<IQueryable<TicketDto>> GetMyTicket(Guid id)
         {
             var tickets = _db.Ticket.Where(x => x.IsDeleted == false && x.CreatedByUser == id).AsEnumerable();
-
             return _mapper.Map<List<TicketDto>>(tickets).AsQueryable();
         }
     }
