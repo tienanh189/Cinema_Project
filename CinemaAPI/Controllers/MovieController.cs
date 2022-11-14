@@ -15,11 +15,11 @@ namespace CinemaAPI.Controllers
         private readonly ICategoryMovieRespository _categoryMovie;
         private readonly ICategoryMovie_MovieRespository _categoryMovie_Movie;
 
-        public MovieController(IMovieRespository repoMovie, ICategoryMovieRespository categoryMovie, ICategoryMovie_MovieRespository categoryMovie_MovieRespository)
+        public MovieController(IMovieRespository repoMovie, ICategoryMovieRespository categoryMovie, ICategoryMovie_MovieRespository categoryMovie_Movie)
         {
             _repoMovie = repoMovie;
             _categoryMovie = categoryMovie;
-            _categoryMovie_Movie = categoryMovie_MovieRespository;
+            _categoryMovie_Movie = categoryMovie_Movie;
         }
 
         [HttpGet("paging")]
@@ -155,7 +155,7 @@ namespace CinemaAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

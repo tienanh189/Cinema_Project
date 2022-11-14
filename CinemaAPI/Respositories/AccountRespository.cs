@@ -36,15 +36,16 @@ namespace CinemaAPI.Respositories
             return users;
         }
 
-        public ApplicationUser GetUser()
+        public UserDto GetUser()
         {
-            var result = new ApplicationUser();
+            var result = new UserDto();
             if (_contextAccessor.HttpContext != null)
             {
                 result.FullNamme = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 result.Email = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
                 result.PhoneNumber = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.MobilePhone);
-                result.Id = _contextAccessor.HttpContext.User.FindFirstValue("UserId");
+                result.Id = _contextAccessor.HttpContext.User.FindFirstValue("UserId");            
+                result.Role = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
             }
             return result;
         }
@@ -57,11 +58,18 @@ namespace CinemaAPI.Respositories
                 return string.Empty;
             }
             var user = await _userManager.FindByNameAsync(dto.Email);
+            var roles = await _userManager.GetRolesAsync(user);
+            string listRole = "";
+            foreach (var role in roles)
+            {
+                listRole += role.ToLowerInvariant();
+            }
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, dto.Email),
                 new Claim("UserId", user.Id),
                 new Claim(ClaimTypes.Name, user.FullNamme),
+                new Claim(ClaimTypes.Role, listRole),
                 new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

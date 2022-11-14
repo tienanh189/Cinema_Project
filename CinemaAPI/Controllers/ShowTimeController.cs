@@ -55,12 +55,41 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("getWithMovieId")]
+        public async Task<IActionResult> GetAllShowTimeWithMovie(Guid MovieId)
+        {
+            try
+            {
+                var showTimes = await GetShowTimeWithMovieId(MovieId);
+                return Ok(showTimes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("getWithRoomId")]
+        public async Task<IActionResult> GetShowTimeWithRoom(Guid RoomId)
+        {
+            try
+            {
+                var showTimes = await GetShowTimeWithRoomId(RoomId);
+                return Ok(showTimes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var showTimes = await _repo.GetAll();
+                var showTimes = await GetAllShowTime();              
                 return Ok(showTimes);
             }
             catch (Exception e)
@@ -144,6 +173,37 @@ namespace CinemaAPI.Controllers
         }
 
         #region  API Helper
+        private async Task<List<ShowTimeDto>> GetAllShowTime()
+        {
+            var showTimeList = new List<ShowTimeDto>();
+            var showTimes = await _repo.GetAll();
+            var movies = await _repoMovie.GetAll();
+            var rooms = await _repoRoom.GetAll();
+            var shifts = await _repoShift.GetAll();
+            foreach (var showtime in showTimes)
+            {
+                var result = from st in showTimes
+                             join m in movies on st.MovieId equals m.MovieId
+                             join s in shifts on st.ShiftId equals s.ShiftId
+                             join r in rooms on st.RoomId equals r.RoomId
+                             where st.ShowTimeId == showtime.ShowTimeId
+                             select new ShowTimeDto
+                             {
+                                 ShowTimeId = st.ShowTimeId,
+                                 MovieId = st.MovieId,
+                                 MovieName = m.MovieName,
+                                 RoomId = st.RoomId,
+                                 RoomName = r.RoomName,
+                                 ShiftId = st.ShiftId,
+                                 ShowDate = st.ShowDate,
+                                 StartTime = s.StartTime,
+                             };
+                showTimeList.Add(result.FirstOrDefault());
+            }
+
+           
+            return showTimeList;
+        }
         private async Task<List<ShowTimeDto>> GetShowTimeWithCinemaId(Guid CinemaId)
         {
             var cinemas = await _repoCinema.GetAll();
@@ -157,6 +217,66 @@ namespace CinemaAPI.Controllers
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
                                 where r.CinemaId == CinemaId && st.ShowDate >= DateTime.UtcNow.Date
+                                select new ShowTimeDto
+                                {
+                                    ShowTimeId = st.ShowTimeId,
+                                    ShowDate = st.ShowDate,
+                                    ShiftId = s.ShiftId,
+                                    StartTime = s.StartTime,
+                                    EndTime = s.EndTime,
+                                    MovieId = st.MovieId,
+                                    MovieName = m.MovieName,
+                                    RoomId = r.RoomId,
+                                    Duration = m.Duration,
+                                    RoomName = r.RoomName
+                                };
+
+            return showTimeQuery.ToList();
+        }
+
+        private async Task<List<ShowTimeDto>> GetShowTimeWithMovieId(Guid MovieId)
+        {
+            var cinemas = await _repoCinema.GetAll();
+            var shifts = await _repoShift.GetAll();
+            var rooms = await _repoRoom.GetAll();
+            var showTimes = await _repo.GetAll();
+            var movies = await _repoMovie.GetAll();
+
+            var showTimeQuery = from st in showTimes
+                                join s in shifts on st.ShiftId equals s.ShiftId
+                                join r in rooms on st.RoomId equals r.RoomId
+                                join m in movies on st.MovieId equals m.MovieId
+                                where m.MovieId == MovieId 
+                                select new ShowTimeDto
+                                {
+                                    ShowTimeId = st.ShowTimeId,
+                                    ShowDate = st.ShowDate,
+                                    ShiftId = s.ShiftId,
+                                    StartTime = s.StartTime,
+                                    EndTime = s.EndTime,
+                                    MovieId = st.MovieId,
+                                    MovieName = m.MovieName,
+                                    RoomId = r.RoomId,
+                                    Duration = m.Duration,
+                                    RoomName = r.RoomName
+                                };
+
+            return showTimeQuery.ToList();
+        }
+
+        private async Task<List<ShowTimeDto>> GetShowTimeWithRoomId(Guid RoomId)
+        {
+            var cinemas = await _repoCinema.GetAll();
+            var shifts = await _repoShift.GetAll();
+            var rooms = await _repoRoom.GetAll();
+            var showTimes = await _repo.GetAll();
+            var movies = await _repoMovie.GetAll();
+
+            var showTimeQuery = from st in showTimes
+                                join s in shifts on st.ShiftId equals s.ShiftId
+                                join r in rooms on st.RoomId equals r.RoomId
+                                join m in movies on st.MovieId equals m.MovieId
+                                where r.RoomId == RoomId 
                                 select new ShowTimeDto
                                 {
                                     ShowTimeId = st.ShowTimeId,
