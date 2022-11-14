@@ -83,6 +83,19 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("getWithDate")]
+        public async Task<IActionResult> GetShowTimeWithShowDate(DateTime date)
+        {
+            try
+            {
+                var showTimes = await GetShowTimeWithDate(date);
+                return Ok(showTimes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
@@ -233,7 +246,6 @@ namespace CinemaAPI.Controllers
 
             return showTimeQuery.ToList();
         }
-
         private async Task<List<ShowTimeDto>> GetShowTimeWithMovieId(Guid MovieId)
         {
             var cinemas = await _repoCinema.GetAll();
@@ -263,7 +275,6 @@ namespace CinemaAPI.Controllers
 
             return showTimeQuery.ToList();
         }
-
         private async Task<List<ShowTimeDto>> GetShowTimeWithRoomId(Guid RoomId)
         {
             var cinemas = await _repoCinema.GetAll();
@@ -277,6 +288,35 @@ namespace CinemaAPI.Controllers
                                 join r in rooms on st.RoomId equals r.RoomId
                                 join m in movies on st.MovieId equals m.MovieId
                                 where r.RoomId == RoomId 
+                                select new ShowTimeDto
+                                {
+                                    ShowTimeId = st.ShowTimeId,
+                                    ShowDate = st.ShowDate,
+                                    ShiftId = s.ShiftId,
+                                    StartTime = s.StartTime,
+                                    EndTime = s.EndTime,
+                                    MovieId = st.MovieId,
+                                    MovieName = m.MovieName,
+                                    RoomId = r.RoomId,
+                                    Duration = m.Duration,
+                                    RoomName = r.RoomName
+                                };
+
+            return showTimeQuery.ToList();
+        }
+        private async Task<List<ShowTimeDto>> GetShowTimeWithDate(DateTime date)
+        {
+            var cinemas = await _repoCinema.GetAll();
+            var shifts = await _repoShift.GetAll();
+            var rooms = await _repoRoom.GetAll();
+            var showTimes = await _repo.GetAll();
+            var movies = await _repoMovie.GetAll();
+
+            var showTimeQuery = from st in showTimes
+                                join s in shifts on st.ShiftId equals s.ShiftId
+                                join r in rooms on st.RoomId equals r.RoomId
+                                join m in movies on st.MovieId equals m.MovieId
+                                where st.ShowDate.Value.Date == date.Date
                                 select new ShowTimeDto
                                 {
                                     ShowTimeId = st.ShowTimeId,
