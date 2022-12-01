@@ -80,6 +80,12 @@ namespace CinemaAPI.Respositories
             return _mapper.Map<MovieDto>(movie.FirstOrDefault());
         }
 
+        public async Task<IQueryable<MovieDto>> GetBySearch(string search)
+        {
+            var movies = _db.Movie.Where(x => x.IsDeleted == false && x.MovieName.Contains(search)).OrderByDescending(x => x.CreatedTime).AsEnumerable();
+            return _mapper.Map<List<MovieDto>>(movies).AsQueryable();
+        }
+
         public async Task<MovieDto> Update(Guid id, MovieDto dto)
         {
             Guid adminId;

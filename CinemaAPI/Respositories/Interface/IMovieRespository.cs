@@ -7,6 +7,7 @@ namespace CinemaAPI.Respositories.Interface
     public interface IMovieRespository
     {
         public Task<IQueryable<MovieDto>> GetAll();
+        public Task<IQueryable<MovieDto>> GetBySearch(string search);
         public Task<MovieDto> GetById(Guid id);
         public Task<MovieDto> Create(MovieDto dto);
         public Task<Guid> CreateAndReturnId(MovieDto dto);

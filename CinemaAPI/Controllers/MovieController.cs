@@ -50,6 +50,21 @@ namespace CinemaAPI.Controllers
             }
         }
 
+        [HttpGet("getsearch")]
+        public async Task<IActionResult> GetSearchByName(string search)
+        {
+            try
+            {
+                var movies = await GetAllMovieDetailHelperSearch(search);
+                return Ok(movies);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         [HttpGet("getall")]
         public async Task<IActionResult> GetAllMoviesWithCategory()
         {
@@ -299,6 +314,44 @@ namespace CinemaAPI.Controllers
         }
 
         // Get all movies with all categorymovies name of them
+        private async Task<List<MovieDetail>> GetAllMovieDetailHelperSearch(string search)
+        {
+            var movies = await _repoMovie.GetBySearch(search);
+            var movieDetailList = new List<MovieDetail>();
+            foreach (var movie in movies.ToList())
+            {
+                var movieDetail = new MovieDetail(Guid.Empty, "null", "null", 12, "null", "null", "null", DateTime.Now, DateTime.Now, false);
+                movieDetail = await GetMovieDetailHelper(movie.MovieId);
+                if (movieDetail.MovieId == Guid.Empty)
+                {
+                    movieDetail.MovieId = movie.MovieId;
+                    movieDetail.MovieName = movie.MovieName;
+                    movieDetail.Duration = movie.Duration;
+                    movieDetail.ReleaseDate = movie.ReleaseDate;
+                    movieDetail.MovieDescription = movie.MovieDescription;
+                    movieDetail.Actor = movie.Actor;
+                    movieDetail.Image = movie.Image;
+                    movieDetail.Director = movie.Director;
+                }
+                DateTime today = DateTime.Now.Date;
+                DateTime realseDay = movie.ReleaseDate.Date;
+                DateTime endDate = movie.EndShowDate.Date;
+                int timeStart = (int)(today - realseDay).TotalDays;
+                int timeEnd = (int)(endDate - today).TotalDays;
+                if (timeStart >= 0 && timeEnd >= 0)
+                {
+                    movieDetail.IsShowing = true;
+                }
+                else
+                {
+                    movieDetail.IsShowing = false;
+                }
+                movieDetailList.Add(movieDetail);
+            }
+
+            return movieDetailList;
+        }
+
         private async Task<List<MovieDetail>> GetAllMovieDetailHelper()
         {
             var movies = await _repoMovie.GetAll();

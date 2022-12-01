@@ -18,7 +18,6 @@ namespace CinemaAPI.Respositories
         private readonly RoleManager<IdentityRole> _roleMager;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly AppConstant APP_CONST;
 
         public AccountRespository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleMager, IConfiguration configuration, IHttpContextAccessor contextAccessor)
@@ -99,9 +98,9 @@ namespace CinemaAPI.Respositories
             var result = await _userManager.CreateAsync(user, dto.Password);
             if (result.Succeeded)
             {
-                if (dto.RoleName.Count() == 0)
+                if (dto.RoleName==null)
                 {
-                    return await _userManager.AddToRoleAsync(user, APP_CONST.ROLE_CUSTOMER);
+                    return await _userManager.AddToRoleAsync(user, "customer");
                 }
                 return await _userManager.AddToRolesAsync(user, dto.RoleName);
             }

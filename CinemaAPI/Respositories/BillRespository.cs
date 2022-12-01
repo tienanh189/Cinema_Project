@@ -86,6 +86,7 @@ namespace CinemaAPI.Respositories
             var bill = await _db.Bill.FindAsync(id);
             if (bill != null)
             {
+                bill.IsPayed = dto.IsPayed;
                 bill.TotalAmount = dto.TotalAmount;
                 bill.ModifiedTime = DateTime.Now;
                 bill.ModifiedByUser = adminId;

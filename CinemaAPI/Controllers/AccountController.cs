@@ -34,8 +34,8 @@ namespace CinemaAPI.Controllers
         {
             try
             {
-                var user = _repo.GetAll();
-                return Ok(user.ToList());
+                var users = _repo.GetAll();
+                return Ok(users);
             }
             catch (Exception e)
             {
@@ -51,9 +51,9 @@ namespace CinemaAPI.Controllers
                 var result = await _repo.SignUpAsync(dto);
                 if (result.Succeeded)
                 {
-                    return Ok(result.Succeeded);
+                    return Ok(true);
                 }
-                return Ok("failed");
+                return Ok(false);
             }
             catch (Exception e)
             {

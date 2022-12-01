@@ -89,6 +89,7 @@ namespace CinemaAPI.Controllers
 
 
         [HttpPost("getBill")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
         public async Task<IActionResult> GetBillDetail([FromBody]BillDetailDto dto)
         {
@@ -172,6 +173,7 @@ namespace CinemaAPI.Controllers
             newBill.CinemaId = input.CinemaId;
             newBill.ShowTimeId = input.ShowTimeId;
             newBill.Date = input.Date;
+
             //Lấy tên rạp
             var cinemas = await _repoCinema.GetById(newBill.CinemaId);
             newBill.CinemaName = cinemas.CinemaName;
@@ -209,7 +211,7 @@ namespace CinemaAPI.Controllers
             //Cập nhật bill
             bill.BillId = newBill.BillId;
             bill.TotalAmount = newBill.TotalAmount;
-            bill.IsPayed = false;
+            bill.IsPayed = true;
             await _repo.Update(newBill.BillId, bill);
             return newBill;
         }
